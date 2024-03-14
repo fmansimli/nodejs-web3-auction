@@ -10,5 +10,6 @@ build/
 test/
 cache/
 artifacts/
+backup/
 
 prod
