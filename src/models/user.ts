@@ -1,4 +1,7 @@
+import { mongo } from "../config/db";
+
 export class User {
+  public _id: string;
   public sid: string;
   public username: string;
   public password: string;
@@ -9,7 +12,6 @@ export class User {
   }
 
   static exec() {
-    //return mongo.db.collection("users");
-    return;
+    return mongo.db.collection("users");
   }
 }

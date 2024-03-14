@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, type Db } from "mongodb";
 
 class AppMongo {
   private instance: MongoClient;
@@ -8,6 +8,13 @@ class AppMongo {
       throw new Error("mongo client has not been initialized yet");
     }
     return this.instance;
+  }
+
+  get db(): Db {
+    if (!this.instance) {
+      throw new Error("mongo client has not been initialized yet!");
+    }
+    return this.instance.db("mydb");
   }
 
   connect(url: string) {

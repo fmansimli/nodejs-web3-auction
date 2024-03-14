@@ -1,15 +1,15 @@
 import { verify, sign, decode } from "jsonwebtoken";
 
 export class Jwt {
-  static async verifyAsync(token: string) {
+  static verifyAsync(token: string) {
     return verify(token, process.env.JWT_SECRET as string);
   }
 
-  static async signAsync(payload: any) {
-    return sign(payload, process.env.JWT_SECRET as string, { expiresIn: "1h" });
+  static signAsync(payload: any, expiresIn = "1h") {
+    return sign(payload, process.env.JWT_SECRET as string, { expiresIn });
   }
 
-  static async signKey(payload: any) {
+  static signKey(payload: any) {
     return sign(payload, process.env.JWT_SECRET as string, { expiresIn: "420d" });
   }
 
