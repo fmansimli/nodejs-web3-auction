@@ -14,6 +14,10 @@ dist/
 tests/
 
 thunder-tests/
+backup/
+test/
+cache/
+artifacts/
 
 .github/
 .git

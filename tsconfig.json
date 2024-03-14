@@ -14,5 +14,5 @@
     "resolveJsonModule": true,
     "removeComments": true
   },
-  "exclude": ["./contracts", "./node_modules", "./scripts", "./test", "./webui"]
+  "exclude": ["./contracts", "./node_modules", "./scripts", "./backup", "./test", "./webui"]
 }
