@@ -15,7 +15,10 @@ const SEPOLIA_PRIVATE_KEY = process.env.SEPOLIA_PRIVATE_KEY as string;
 const ETHER_SCAN_KEY = process.env.ETHER_SCAN_KEY as string;
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.24",
+  solidity: {
+    version: "0.8.24",
+    settings: { optimizer: { enabled: true, runs: 200 } }
+  },
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {},
