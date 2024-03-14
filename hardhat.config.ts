@@ -1,5 +1,6 @@
 import { HardhatUserConfig, task } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
+import "dotenv/config";
 
 task("accounts", "prints the list of accounts", async (taskArgs, hre) => {
   const accounts = await hre.ethers.getSigners();

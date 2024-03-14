@@ -19,7 +19,13 @@
     "serve": "node ./prod/src/index.js",
     "serve:pm2": "pm2 start ./prod/src/index.js",
     "serve:pm2:runtime": "pm2-runtime start ./prod/src/index.js",
-    "deploy": "npm run self:build && npm run git && git push heroku master"
+    "deploy": "npm run self:build && npm run git && git push heroku master",
+    "deploy:sepolia": "npx hardhat run scripts/deploy.ts --network sepolia",
+    "deploy:localhost": "npx hardhat run scripts/deploy.ts --network localhost",
+    "deploy:hardhat": "npx hardhat run scripts/deploy.ts",
+    "test": "npx hardhat test --parallel",
+    "compile": "npx hardhat compile",
+    "help": "npx hardhat --help"
   },
   "author": "Farid Mansimli",
   "license": "ISC",
