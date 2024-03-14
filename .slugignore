@@ -1,7 +1,12 @@
 src/
 webui/
 .vscode/
-zfolder
+zfolder/
+
+contracts/
+test/
+cache/
+artifacts/
 
 .eslintignore
 .eslintrc.json
