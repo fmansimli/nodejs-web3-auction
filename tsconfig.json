@@ -14,5 +14,6 @@
     "resolveJsonModule": true,
     "removeComments": true
   },
+  "include": ["./app.d.ts"],
   "exclude": ["./contracts", "./node_modules", "./scripts", "./backup", "./test", "./webui"]
 }

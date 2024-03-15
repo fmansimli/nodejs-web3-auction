@@ -19,8 +19,9 @@ export const signin: RequestHandler = async (req, res, next) => {
       throw new BadRequestError("email or password is in correct!");
     }
 
-    const accessToken = Jwt.signAsync({ email, id: user._id }, "1h");
-    const refreshToken = Jwt.signAsync({ email, id: user._id }, "12h");
+    const payload = { email, id: user._id, roles: ["4"] };
+    const accessToken = Jwt.signAsync(payload, "1h");
+    const refreshToken = Jwt.signAsync(payload, "12h");
 
     res.status(200).json({
       user: {
@@ -47,8 +48,9 @@ export const signup: RequestHandler = async (req, res, next) => {
     const hashed = await Password.toHash(password);
     const resp = await User.exec().insertOne({ email, password: hashed });
 
-    const accessToken = Jwt.signAsync({ email, id: resp.insertedId }, "1h");
-    const refreshToken = Jwt.signAsync({ email, id: resp.insertedId }, "12h");
+    const payload = { email, id: resp.insertedId, roles: ["4"] };
+    const accessToken = Jwt.signAsync(payload, "1h");
+    const refreshToken = Jwt.signAsync(payload, "12h");
 
     res.status(200).json({
       user: {

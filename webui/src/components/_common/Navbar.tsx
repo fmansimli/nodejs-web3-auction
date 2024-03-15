@@ -4,9 +4,6 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import ThemeSwitcher from "../ThemeSwitcher";
 
-import { type Signal, computed } from "@preact/signals-react";
-import { authData } from "../../signals/auth.signal";
-
 const navigation = [
   { name: "Home", href: "/", current: true },
   { name: "About", href: "/about", current: false },
@@ -19,13 +16,15 @@ function classNames(...classes: any) {
 }
 
 interface IProps {
-  authData: Signal<{ user: any; accessToken: string }>;
+  authData: any;
+  onLogout: () => void;
 }
 
-const isLoggedIn = computed(() => !!authData.value.user);
-
 const Navbar: React.FC<IProps> = (props) => {
-  console.log("rendering navbar.tsx...");
+  function logoutHandler(e: React.MouseEvent) {
+    e.preventDefault();
+    props.onLogout();
+  }
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -78,7 +77,7 @@ const Navbar: React.FC<IProps> = (props) => {
                   <ThemeSwitcher />
                 </div>
 
-                {props.authData.value.user ? (
+                {props.authData.user ? (
                   <>
                     <button
                       type="button"
@@ -136,7 +135,8 @@ const Navbar: React.FC<IProps> = (props) => {
                           <Menu.Item>
                             {({ active }) => (
                               <a
-                                href="#"
+                                href="/"
+                                onClick={logoutHandler}
                                 className={classNames(
                                   active ? "bg-gray-100" : "",
                                   "block px-4 py-2 text-sm text-gray-700"

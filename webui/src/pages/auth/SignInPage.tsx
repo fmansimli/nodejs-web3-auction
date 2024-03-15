@@ -1,17 +1,22 @@
 import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+
 import { http } from "../../objects/http";
 
 import SignInForm from "../../components/auth/SignInForm";
-import { authData } from "../../signals/auth.signal";
+import { authState } from "../../state/auth.state";
 
 const SignInPage = () => {
   const navigate = useNavigate();
+  const [_auth, setAuth] = useRecoilState(authState);
 
   async function onSubmitHanlder(values: any) {
     try {
       const { data } = await http.post("/api/auth/signin", values);
       const { user, auth } = data;
-      authData.value = { user, accessToken: auth.accessToken };
+
+      setAuth({ user, initialized: true, accessToken: auth.accessToken });
+      localStorage.setItem("token", auth.accessToken);
 
       return navigate("/");
     } catch (error: any) {

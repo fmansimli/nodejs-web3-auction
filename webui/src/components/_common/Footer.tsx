@@ -1,11 +1,15 @@
-const Footer = () => {
-  console.log("rendering footer...");
+import { type FC, memo } from "react";
 
+interface IProps {}
+
+const Footer: FC<IProps> = memo((props) => {
   return (
-    <footer className="container border-t">
-      <div className="py-5 text-white">Footer</div>
+    <footer className="w-full bg-gray-600">
+      <div className="container mx-auto">
+        <div className="py-5">Footer</div>
+      </div>
     </footer>
   );
-};
+});
 
 export default Footer;
