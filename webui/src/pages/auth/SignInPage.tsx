@@ -17,6 +17,7 @@ const SignInPage = () => {
 
       setAuth({ user, initialized: true, accessToken: auth.accessToken });
       localStorage.setItem("token", auth.accessToken);
+      http.defaults.headers["Authorization"] = "Bearer " + auth.accessToken;
 
       return navigate("/");
     } catch (error: any) {
