@@ -9,6 +9,8 @@ contract AuctionFactory {
         factoryOwner = payable(msg.sender);
     }
 
+    event Transfer(uint amount, address to, uint when);
+
     function createAuction(string memory title, uint256 basePrice) public payable {
         require(
             msg.value >= 0.001 ether,
@@ -17,11 +19,12 @@ contract AuctionFactory {
 
         address auction = address(new Auction(title, basePrice, payable(msg.sender)));
         auctions.push(auction);
-        factoryOwner.transfer(address(this).balance);
     }
 
     function transferAllCommissions() public {
-        require(msg.sender == factoryOwner, "only factory owner do this operation");
+        require(msg.sender == factoryOwner, "only factory owner can do this operation");
+
+        emit Transfer(address(this).balance, factoryOwner, block.timestamp);
         factoryOwner.transfer(address(this).balance);
     }
 
@@ -34,7 +37,7 @@ contract Auction {
     string public title;
     uint256 public basePrice;
     mapping(address => uint256) public bidders;
-    uint256 public finishTime = block.timestamp + 1000000;
+    uint256 public finishTime = block.timestamp + 1800000;
     address payable public creator;
     bool public completed;
     Bid[] public bids;
@@ -118,7 +121,7 @@ contract Auction {
         bids.push(newbid);
 
         basePrice = _amount;
-        finishTime = block.timestamp + 100;
+        finishTime = block.timestamp + 300;
     }
 
     function getLastBid() public view returns (Bid memory) {
@@ -128,7 +131,7 @@ contract Auction {
         return Bid({ amount: basePrice, owner: payable(creator) });
     }
 
-    function getAllBid() public view returns (Bid[] memory) {
+    function getAllBids() public view returns (Bid[] memory) {
         return bids;
     }
 
@@ -137,11 +140,25 @@ contract Auction {
         return nextAmount - previousAmount;
     }
 
-    function getSummary()
-        public
-        view
-        returns (string memory, address, uint256, uint256, bool, Bid[] memory)
-    {
-        return (title, creator, basePrice, finishTime, completed, bids);
+    struct Summary {
+        string title;
+        address creator;
+        uint256 basePrice;
+        uint256 finishTime;
+        bool completed;
+        Bid[] bids;
+    }
+
+    function getSummary() public view returns (Summary memory) {
+        Summary memory summary = Summary({
+            title: title,
+            creator: creator,
+            basePrice: basePrice,
+            finishTime: finishTime,
+            completed: completed,
+            bids: bids
+        });
+
+        return summary;
     }
 }

@@ -25,7 +25,7 @@
     "deploy:new": "npx hardhat ignition deploy ./ignition/modules/AuctionFactory.ts",
     "deploy:hardhat": "npx hardhat run scripts/deploy.ts",
     "test": "npx hardhat test --parallel",
-    "compile": "npx hardhat compile",
+    "compile": "npx hardhat clean && npx hardhat compile",
     "help": "npx hardhat --help",
     "hardhat": "npx hardhat"
   },
