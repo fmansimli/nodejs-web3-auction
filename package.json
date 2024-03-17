@@ -22,6 +22,7 @@
     "deploy": "npm run self:build && npm run git && git push heroku master",
     "deploy:sepolia": "npx hardhat run scripts/deploy.ts --network sepolia",
     "deploy:localhost": "npx hardhat run scripts/deploy.ts --network localhost",
+    "deploy:new": "npx hardhat ignition deploy ./ignition/modules/AuctionFactory.ts",
     "deploy:hardhat": "npx hardhat run scripts/deploy.ts",
     "test": "npx hardhat test --parallel",
     "compile": "npx hardhat compile",
@@ -43,7 +44,7 @@
     "socket.io": "^4.7.4"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/morgan": "^1.9.9",
@@ -51,7 +52,7 @@
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "eslint": "^8.57.0",
-    "hardhat": "^2.22.0",
+    "hardhat": "^2.22.1",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2"
   },
