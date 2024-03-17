@@ -13,8 +13,8 @@ contract AuctionFactory {
 
     function createAuction(string memory title, uint256 basePrice) public payable {
         require(
-            msg.value >= 0.001 ether,
-            "you need to pay minimum 0.001 ether to create an auction"
+            msg.value >= 0.0001 ether,
+            "you need to pay minimum 0.0001 ether to create an auction"
         );
 
         address auction = address(new Auction(title, basePrice, payable(msg.sender)));
@@ -84,7 +84,7 @@ contract Auction {
             }
             return;
         }
-        require(false, "auction still continue.");
+        revert("auction still continue.");
     }
 
     function withdraw() public {
@@ -106,9 +106,9 @@ contract Auction {
                 bidders[msg.sender] = 0;
                 return;
             }
-            require(false, "you did not bid any amount.");
+            revert("you did not bid any amount.");
         }
-        require(false, "auction still continue.");
+        revert("auction still continue.");
     }
 
     function makeBid() public payable timeCheck onlyHigh {

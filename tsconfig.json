@@ -14,5 +14,16 @@
     "resolveJsonModule": true,
     "removeComments": true
   },
-  "exclude": ["./contracts", "./node_modules", "./backup", "./webui"]
+  "exclude": [
+    "./contracts",
+    "./node_modules",
+    "./backup",
+    "./webui",
+    "./artifacts",
+    "./ignition",
+    "./typechain-types",
+    "./cache",
+    "./test",
+    "./hardhat.config.ts"
+  ]
 }

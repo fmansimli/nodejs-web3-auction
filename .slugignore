@@ -2,8 +2,13 @@ src/
 webui/
 .vscode/
 zfolder/
+node_modules/
 
 contracts/
+artifacts/
+cache/
+typechain-types/
+ignition/
 test/
 cache/
 artifacts/
@@ -15,7 +20,9 @@ backup/
 .prettierignore
 .prettierrc
 .dockerignore
+.env.example
 
+hardhat.config.ts
 nodemon.json
 environments.d.ts
 .node-version

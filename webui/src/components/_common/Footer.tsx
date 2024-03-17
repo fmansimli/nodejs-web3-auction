@@ -2,7 +2,7 @@ import { type FC, memo } from "react";
 
 interface IProps {}
 
-const Footer: FC<IProps> = memo((props) => {
+const Footer: FC<IProps> = memo((_props) => {
   return (
     <footer className="w-full bg-gray-600">
       <div className="container mx-auto">
