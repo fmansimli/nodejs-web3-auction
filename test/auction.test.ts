@@ -10,7 +10,7 @@ describe("Auction Contract", () => {
     const Auction = await hre.ethers.getContractFactory("Auction");
 
     const TITLE = "auction1";
-    const BASE_PRICE = 2000;
+    const BASE_PRICE = 2000000;
 
     const auction = await Auction.deploy(TITLE, BASE_PRICE, owner);
 
@@ -43,7 +43,7 @@ describe("Auction Contract", () => {
     });
   });
 
-  describe("Auction Actions", () => {
+  describe("Auction User Actions", () => {
     it("should not allow make a bid lower than first-base price", async () => {
       const { auction, BASE_PRICE } = await loadFixture(auctionFixture);
 
@@ -146,6 +146,109 @@ describe("Auction Contract", () => {
       expect(data.creator).to.be.equal(owner);
       expect(data.bids[0].owner).to.be.equal(address2);
       expect(data.bids[0].amount).to.be.equal(BASE_PRICE * 2);
+    });
+  });
+
+  describe("Auction Finising Actions", () => {
+    it("should not allow to finish, before a auction has finished.", async () => {
+      const { auction } = await loadFixture(auctionFixture);
+
+      await expect(auction.finish()).to.be.revertedWith("auction still continue.");
+    });
+
+    it("should not be finished by a non-creator user", async () => {
+      const { auction, address2 } = await loadFixture(auctionFixture);
+
+      const promise = auction.connect(address2).finish();
+      await expect(promise).to.be.revertedWith("only creator can do this operation!");
+    });
+
+    it("should be able to be finished by creator, after finishTime", async () => {
+      const { auction } = await loadFixture(auctionFixture);
+
+      await time.increaseTo(Number.MAX_SAFE_INTEGER);
+      await expect(auction.finish()).to.be.not.reverted;
+    });
+
+    it("should set 'completed' to true, after auction finished", async () => {
+      const { auction } = await loadFixture(auctionFixture);
+
+      await time.increaseTo(Number.MAX_SAFE_INTEGER);
+      await expect(auction.finish()).to.be.not.reverted;
+
+      const completed = await auction.completed();
+      expect(completed).to.be.equal(true);
+    });
+
+    it("should allow the creator to get ethers, after the auction finished", async () => {
+      const { auction, owner, address2, address3, BASE_PRICE } = await loadFixture(
+        auctionFixture
+      );
+
+      await auction.connect(address2).makeBid({ value: hre.ethers.parseUnits("2", "ether") });
+      await auction.connect(address3).makeBid({ value: hre.ethers.parseUnits("5", "ether") });
+
+      await time.increaseTo(Number.MAX_SAFE_INTEGER);
+
+      const prevBalance = await hre.ethers.provider.getBalance(owner);
+      await auction.finish();
+      const currentBalance = await hre.ethers.provider.getBalance(owner);
+
+      const difference = currentBalance - prevBalance;
+      expect(difference).to.be.greaterThan(hre.ethers.parseUnits("4.9", "ether"));
+    });
+  });
+
+  describe("Auction Withdraw Actions", () => {
+    it("should revert the withdraw, if there are no bids", async () => {
+      const { auction, address2 } = await loadFixture(auctionFixture);
+
+      const promise = auction.connect(address2).withdraw();
+      await expect(promise).to.be.revertedWith("you did not bid any amount!");
+    });
+
+    it("should not allow to withdraw, before a auction has finished.", async () => {
+      const { auction, address2, address3, BASE_PRICE } = await loadFixture(auctionFixture);
+
+      await auction.connect(address2).makeBid({ value: BASE_PRICE * 2 });
+      await auction.connect(address3).makeBid({ value: BASE_PRICE * 3 });
+
+      const promise = auction.connect(address2).withdraw();
+      await expect(promise).to.be.revertedWith("auction still continue.");
+    });
+
+    it("should not allow the winner to withdraw", async () => {
+      const { auction, address2, address3, BASE_PRICE } = await loadFixture(auctionFixture);
+
+      await auction.connect(address2).makeBid({ value: BASE_PRICE * 2 });
+      await auction.connect(address3).makeBid({ value: BASE_PRICE * 3 });
+
+      await time.increaseTo(Number.MAX_SAFE_INTEGER);
+
+      const promise = auction.connect(address3).withdraw();
+      await expect(promise).to.be.revertedWith("you can not withdraw, you won the auction!");
+    });
+
+    it("should not allow someone who didn't bid withdraw, when the auction is finished", async () => {
+      const { auction, address2, address3, BASE_PRICE } = await loadFixture(auctionFixture);
+
+      await auction.connect(address3).makeBid({ value: BASE_PRICE * 3 });
+      await time.increaseTo(Number.MAX_SAFE_INTEGER);
+
+      const promise = auction.connect(address2).withdraw();
+      await expect(promise).to.be.revertedWith("you did not bid any amount.");
+    });
+
+    it("should be able to withdraw, if auction is finished and did not win", async () => {
+      const { auction, address2, address3, BASE_PRICE } = await loadFixture(auctionFixture);
+
+      await auction.connect(address2).makeBid({ value: BASE_PRICE * 2 });
+      await auction.connect(address3).makeBid({ value: BASE_PRICE * 3 });
+
+      await time.increaseTo(Number.MAX_SAFE_INTEGER);
+
+      const promise = auction.connect(address2).withdraw();
+      await expect(promise).to.be.not.reverted;
     });
   });
 });
