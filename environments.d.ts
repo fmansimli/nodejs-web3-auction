@@ -7,6 +7,7 @@ declare global {
       ALCHEMY_API_KEY: string;
       SEPOLIA_PRIVATE_KEY: string;
       ETHER_SCAN_KEY: string;
+      SEED_PHRASE: string;
     }
   }
 }

@@ -21,7 +21,12 @@ const config: HardhatUserConfig = {
   },
   defaultNetwork: "hardhat",
   networks: {
-    hardhat: {},
+    hardhat: {
+      accounts: {
+        mnemonic: process.env.SEED_PHRASE
+      },
+      chainId: 1337
+    },
     localhost: {
       url: "http://127.0.0.1:8545"
     },
