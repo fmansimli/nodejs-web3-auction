@@ -12,3 +12,8 @@ node_modules
 /coverage
 /coverage.json
 node_modules
+
+.DS_Store
+journal.jsonl
+
+*.dbg.json

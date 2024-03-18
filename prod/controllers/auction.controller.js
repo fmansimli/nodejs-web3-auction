@@ -3,10 +3,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteAll = exports.getById = exports.createBulk = exports.create = exports.getAll = void 0;
 const auction_1 = require("../models/auction");
 const mongodb_1 = require("mongodb");
+const errors_1 = require("../errors");
 const getAll = async (req, res, next) => {
+    const { page = 1, limit = 10 } = req.query || {};
     try {
-        const auctions = await auction_1.Auction.exec().find().toArray();
-        res.status(200).json({ auctions });
+        const skip = (+page - 1) * +limit;
+        if (isNaN(skip)) {
+            throw new errors_1.BadRequestError("invalid query params.");
+        }
+        const auctions = await auction_1.Auction.exec().find().skip(skip).limit(+limit).toArray();
+        const totalCount = await auction_1.Auction.exec().countDocuments();
+        const pageCount = Math.ceil(totalCount / +limit);
+        res.status(200).json({ auctions, meta: { totalCount, pageCount } });
     }
     catch (error) {
         next(error);
@@ -30,8 +38,9 @@ const createBulk = async (req, res, next) => {
         const auctions = new Array(100).fill(0).map((number, index) => {
             const auction = new auction_1.Auction({
                 title: "auction title " + (index + 1),
+                address: "0x00000000000000000000000000",
                 desc: "auction desc " + (index + 1),
-                startingPrice: (index + 1) * 100
+                basePrice: (index + 1) * 100
             });
             return auction;
         });

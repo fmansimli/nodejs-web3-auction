@@ -3,9 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.test = exports.createJwtKey = void 0;
 const jwt_1 = require("../services/jwt");
 const createJwtKey = async (req, res, next) => {
-    const { lang, deviceType, deviceName } = req.body;
     try {
-        const jwtKey = await jwt_1.Jwt.signKey({ lang, deviceType, deviceName });
+        const jwtKey = jwt_1.Jwt.signKey({ roles: ["6", "9"] });
         res.status(200).json({ jwt: jwtKey });
     }
     catch (error) {

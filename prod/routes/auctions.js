@@ -25,10 +25,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const auction = __importStar(require("../controllers/auction.controller"));
+const access_1 = require("../middlewares/access");
+const enums_1 = require("../enums");
 const router = (0, express_1.Router)();
-router.get("/", auction.getAll);
-router.get("/:id", auction.getById);
-router.post("/", auction.create);
-router.post("/bulk", auction.createBulk);
-router.delete("/", auction.deleteAll);
+router.get("/", (0, access_1.access)(enums_1.Role.ANON), auction.getAll);
+router.get("/:id", (0, access_1.access)(enums_1.Role.ANON), auction.getById);
+router.post("/", (0, access_1.access)(enums_1.Role.USER), auction.create);
+router.post("/bulk", (0, access_1.access)(enums_1.Role.USER), auction.createBulk);
+router.delete("/", (0, access_1.access)(enums_1.Role.USER), auction.deleteAll);
 exports.default = router;

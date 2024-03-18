@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Errors = exports.Role = void 0;
 var Role;
 (function (Role) {
-    Role["ADMIN"] = "8";
-    Role["USER"] = "4";
-    Role["AUTHOR"] = "9";
+    Role["ADMIN"] = "6";
+    Role["USER"] = "9";
+    Role["ANON"] = "0";
 })(Role || (exports.Role = Role = {}));
 var Errors;
 (function (Errors) {

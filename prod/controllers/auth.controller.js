@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signup = exports.signin = void 0;
+exports.anonymous = exports.signup = exports.signin = void 0;
 const errors_1 = require("../errors");
 const user_1 = require("../models/user");
 const utils_1 = require("../utils");
@@ -16,7 +16,7 @@ const signin = async (req, res, next) => {
         if (!pwdMatch) {
             throw new errors_1.BadRequestError("email or password is in correct!");
         }
-        const payload = { email, id: user._id, roles: ["4"] };
+        const payload = { email, id: user._id, roles: ["9"] };
         const accessToken = jwt_1.Jwt.signAsync(payload, "1h");
         const refreshToken = jwt_1.Jwt.signAsync(payload, "12h");
         res.status(200).json({
@@ -41,15 +41,15 @@ const signup = async (req, res, next) => {
         }
         const hashed = await utils_1.Password.toHash(password);
         const resp = await user_1.User.exec().insertOne({ email, password: hashed });
-        const payload = { email, id: resp.insertedId, roles: ["4"] };
+        const payload = { email, id: resp.insertedId, roles: ["9"] };
         const accessToken = jwt_1.Jwt.signAsync(payload, "1h");
         const refreshToken = jwt_1.Jwt.signAsync(payload, "12h");
         res.status(200).json({
             user: {
                 _id: resp.insertedId,
-                email: email,
-                auth: { accessToken, refreshToken }
-            }
+                email: email
+            },
+            auth: { accessToken, refreshToken }
         });
     }
     catch (error) {
@@ -57,3 +57,14 @@ const signup = async (req, res, next) => {
     }
 };
 exports.signup = signup;
+const anonymous = async (req, res, next) => {
+    try {
+        const payload = { id: "", roles: ["0"] };
+        const accessToken = jwt_1.Jwt.signAsync(payload, "1h");
+        res.status(200).json({ user: null, auth: { accessToken } });
+    }
+    catch (error) {
+        next(error);
+    }
+};
+exports.anonymous = anonymous;
