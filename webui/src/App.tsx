@@ -8,12 +8,13 @@ import Navbar from "./components/_common/Navbar";
 import HomePage from "./pages/HomePage";
 import SignInPage from "./pages/auth/SignInPage";
 import SignUpPage from "./pages/auth/SignUpPage";
+import AuctionDetailPage from "./pages/auctions/AuctionDetailPage";
+import NewAuctionPage from "./pages/auctions/NewAuctionPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import AboutPage from "./pages/AboutPage";
 
 import { defaultValues } from "./swr/config";
 import { authQuery, authState } from "./state/auth.state";
-import AuctionDetailPage from "./pages/auctions/AuctionDetailPage";
 import Loading from "./components/Loading";
 
 function App() {
@@ -58,6 +59,7 @@ function App() {
                   <Route path="/" element={<HomePage />} />
                   <Route path="/auth/signin" element={<SignInPage />} />
                   <Route path="/auth/signup" element={<SignUpPage />} />
+                  <Route path="/auctions/new" element={<NewAuctionPage />} />
                   <Route path="/auctions/:id" element={<AuctionDetailPage />} />
                   <Route path="/about" element={<AboutPage />} />
                   <Route path="*" element={<NotFoundPage />} />

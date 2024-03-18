@@ -27,8 +27,10 @@ const SignInPage = () => {
 
   return (
     <div className="flex w-full items-center justify-center bg-white dark:bg-gray-700">
-      <div>
-        <SignInForm onSubmit={onSubmitHanlder} />
+      <div className="container flex flex-1 items-center justify-center">
+        <div className="w-full max-w-md">
+          <SignInForm onSubmit={onSubmitHanlder} />
+        </div>
       </div>
     </div>
   );

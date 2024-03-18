@@ -17,7 +17,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
     "recoil": "^0.7.7",
-    "swr": "^2.2.5"
+    "swr": "^2.2.5",
+    "web3": "^4.6.0"
   },
   "devDependencies": {
     "@radix-ui/colors": "^3.0.0",
