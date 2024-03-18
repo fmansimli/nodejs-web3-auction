@@ -8,6 +8,9 @@ node_modules
 /typechain
 /typechain-types
 
+build-info/
+/build-info
+
 # solidity-coverage files
 /coverage
 /coverage.json
