@@ -1,7 +1,7 @@
 export enum Role {
-  ADMIN = "8",
-  USER = "4",
-  AUTHOR = "9"
+  ADMIN = "6",
+  USER = "9",
+  ANON = "0"
 }
 
 export enum Errors {

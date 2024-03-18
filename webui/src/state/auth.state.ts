@@ -3,7 +3,7 @@ import { http } from "../objects/http";
 
 interface IState {
   user: null | { email: string; _id: string };
-  accessToken: string;
+  accessToken: string | null;
   initialized: boolean;
 }
 
@@ -28,18 +28,29 @@ export const authSelector = selector({
 export const authQuery = selector({
   key: Math.random().toString(),
   async get() {
+    let user;
+    let token = localStorage.getItem("token");
     try {
-      const accessToken = localStorage.getItem("token");
-
-      if (!accessToken) {
-        return { ...defaultState, initialized: true };
+      if (token) {
+        const { data } = await http.get("/api/account/profile");
+        user = data.user;
       }
-      http.defaults.headers["Authorization"] = "Bearer " + accessToken;
+    } catch (error) {
+      localStorage.removeItem("token");
+      token = "";
+    }
 
-      const { data } = await http.get("/api/account/profile");
-      return { user: data.user, initialized: true, accessToken };
+    try {
+      if (!token) {
+        const { data } = await http.get("/api/auth/anonymous");
+        token = data.auth.accessToken;
+        user = data.user;
+      }
     } catch (error) {
       return { ...defaultState, initialized: true };
     }
+
+    http.defaults.headers["Authorization"] = "Bearer " + token;
+    return { user, accessToken: token, initialized: true };
   }
 });

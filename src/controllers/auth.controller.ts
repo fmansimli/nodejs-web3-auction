@@ -19,7 +19,7 @@ export const signin: RequestHandler = async (req, res, next) => {
       throw new BadRequestError("email or password is in correct!");
     }
 
-    const payload = { email, id: user._id, roles: ["4"] };
+    const payload = { email, id: user._id, roles: ["9"] };
     const accessToken = Jwt.signAsync(payload, "1h");
     const refreshToken = Jwt.signAsync(payload, "12h");
 
@@ -48,17 +48,28 @@ export const signup: RequestHandler = async (req, res, next) => {
     const hashed = await Password.toHash(password);
     const resp = await User.exec().insertOne({ email, password: hashed });
 
-    const payload = { email, id: resp.insertedId, roles: ["4"] };
+    const payload = { email, id: resp.insertedId, roles: ["9"] };
     const accessToken = Jwt.signAsync(payload, "1h");
     const refreshToken = Jwt.signAsync(payload, "12h");
 
     res.status(200).json({
       user: {
         _id: resp.insertedId,
-        email: email,
-        auth: { accessToken, refreshToken }
-      }
+        email: email
+      },
+      auth: { accessToken, refreshToken }
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const anonymous: RequestHandler = async (req, res, next) => {
+  try {
+    const payload = { id: "", roles: ["0"] };
+    const accessToken = Jwt.signAsync(payload, "1h");
+
+    res.status(200).json({ user: null, auth: { accessToken } });
   } catch (error) {
     next(error);
   }

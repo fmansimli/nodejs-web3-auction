@@ -6,9 +6,7 @@ import ThemeSwitcher from "../ThemeSwitcher";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
-  { name: "About", href: "/about", current: false },
-  { name: "Login", href: "/auth/signin", current: false },
-  { name: "Register", href: "/auth/signup", current: false }
+  { name: "About", href: "/about", current: false }
 ];
 
 function classNames(...classes: any) {

@@ -3,9 +3,10 @@ import { mongo } from "../config/db";
 
 export class Auction {
   public _id?: ObjectId;
+  public address: string;
   public title: string;
   public desc: string;
-  public startingPrice: number;
+  public basePrice: number;
   public createdAt = new Date();
 
   constructor(attrs: Partial<Auction>) {
