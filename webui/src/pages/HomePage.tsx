@@ -70,7 +70,7 @@ const HomePage = () => {
           onNext={nextPage}
           onPrev={prevPage}
           prevDisabled={params.get("page") === "1"}
-          nextDisabled={data.meta.pageCount == params.get("page")}
+          nextDisabled={data.meta.pageCount <= +params.get("page")!}
         />
       </div>
     </div>

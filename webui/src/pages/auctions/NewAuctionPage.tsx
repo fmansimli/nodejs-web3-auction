@@ -17,7 +17,7 @@ const NewAuctionPage = () => {
 
   return (
     <div className="flex flex-1">
-      <div className="container flex flex-1 items-center justify-center">
+      <div className="container my-8 flex flex-1 items-center justify-center">
         <div className="w-full max-w-md">
           <AuctionForm onSubmit={submitHandle} />
         </div>

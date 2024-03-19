@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+
 import MyInput from "../ui/MyInput";
 import MyTextArea from "../ui/MyTextArea";
+
+import SingImg from "../../assets/images/sign.png";
 
 interface IProps {
   onSubmit: (values: any) => Promise<void>;
@@ -28,16 +32,11 @@ const AuctionForm: React.FC<IProps> = (props) => {
 
   return (
     <div className="flex w-full flex-col items-center">
-      <a
-        href="#"
+      <Link
+        to="/"
         className="mb-6 flex items-center text-2xl font-semibold text-gray-900 dark:text-white">
-        <img
-          className="mr-2 h-8 w-8"
-          src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
-          alt="logo"
-        />
-        Flowbite
-      </a>
+        <img className="h-20" src={SingImg} alt="logo" />
+      </Link>
       <div className="w-full rounded-lg bg-white shadow dark:border dark:border-gray-700 dark:bg-gray-800 md:mt-0 xl:p-0">
         <div className="space-y-4 p-6 sm:p-8 md:space-y-6">
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white">

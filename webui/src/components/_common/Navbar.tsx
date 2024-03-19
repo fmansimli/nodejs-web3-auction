@@ -4,6 +4,9 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import ThemeSwitcher from "../ThemeSwitcher";
 
+import Logo from "../../assets/images/logo.png";
+import AvatarImg from "../../assets/images/hacker.png";
+
 const navigation = [
   { name: "Home", href: "/", current: true },
   { name: "About", href: "/about", current: false }
@@ -41,17 +44,13 @@ const Navbar: React.FC<IProps> = (props) => {
                   )}
                 </Disclosure.Button>
               </div>
-              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+              <div className="ml-10 flex flex-1 items-center sm:ml-0 sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
-                  <Link to="/">
-                    <img
-                      className="h-8 w-auto"
-                      src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                      alt="Your Company"
-                    />
+                  <Link to="/" className="mx-5 lg:mx-0">
+                    <img className="h-12 w-auto" src={Logo} alt="logo" />
                   </Link>
                 </div>
-                <div className="hidden sm:ml-6 sm:block">
+                <div className="hidden items-center sm:ml-6 sm:flex">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
                       <Link
@@ -90,9 +89,9 @@ const Navbar: React.FC<IProps> = (props) => {
                           <span className="absolute -inset-1.5" />
                           <span className="sr-only">Open user menu</span>
                           <img
-                            className="h-8 w-8 rounded-full"
-                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                            alt=""
+                            className="h-10 w-10 rounded-full bg-gray-300 p-1.5"
+                            src={AvatarImg}
+                            alt="avatar"
                           />
                         </Menu.Button>
                       </div>

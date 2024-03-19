@@ -16,7 +16,7 @@ const signin = async (req, res, next) => {
         if (!pwdMatch) {
             throw new errors_1.BadRequestError("email or password is in correct!");
         }
-        const payload = { email, id: user._id, roles: ["9"] };
+        const payload = { email, id: user._id, roles: ["0", "9"] };
         const accessToken = jwt_1.Jwt.signAsync(payload, "1h");
         const refreshToken = jwt_1.Jwt.signAsync(payload, "12h");
         res.status(200).json({
@@ -41,7 +41,7 @@ const signup = async (req, res, next) => {
         }
         const hashed = await utils_1.Password.toHash(password);
         const resp = await user_1.User.exec().insertOne({ email, password: hashed });
-        const payload = { email, id: resp.insertedId, roles: ["9"] };
+        const payload = { email, id: resp.insertedId, roles: ["0", "9"] };
         const accessToken = jwt_1.Jwt.signAsync(payload, "1h");
         const refreshToken = jwt_1.Jwt.signAsync(payload, "12h");
         res.status(200).json({

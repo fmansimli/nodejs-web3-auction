@@ -32,7 +32,11 @@ export const authQuery = selector({
     let token = localStorage.getItem("token");
     try {
       if (token) {
-        const { data } = await http.get("/api/account/profile");
+        const { data } = await http.get("/api/account/profile", {
+          headers: {
+            Authorization: "Bearer " + token
+          }
+        });
         user = data.user;
       }
     } catch (error) {
