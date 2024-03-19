@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-
+import useSWR from "swr";
 import AuctionItem from "../../components/auctions/AuctionItem";
 import AuctionsSkeleton from "../../components/auctions/AuctionsSkeleton";
 import factory from "../../web3/factory";
@@ -7,33 +6,17 @@ import AuctionCont from "../../web3/auction";
 import type { Auction } from "../../models/auction";
 
 const AuctionListPage = () => {
-  const [error, setError] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [auctions, setAuctions] = useState<Auction[]>([]);
+  const { data, error, isLoading } = useSWR<any>("/auctions", getList);
 
-  useEffect(() => {
-    fetchAuctions();
-  }, []);
-
-  async function fetchAuctions() {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const _auctions: string[] = await factory.methods.getAuctions().call();
-      const promises = _auctions.map((address) =>
-        AuctionCont.from(address).methods.getBasicInfo().call()
-      );
-
-      const list = await Promise.all(promises);
-      setAuctions(list as any);
-    } catch (error: any) {
-      setError(error);
-    }
-    setLoading(false);
+  async function getList() {
+    const _auctions: string[] = await factory.methods.getAuctions().call();
+    const promises = _auctions.map((address) =>
+      AuctionCont.from(address).methods.getBasicInfo().call()
+    );
+    return Promise.all(promises);
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="container my-6 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {new Array(window.innerWidth < 500 ? 6 : 20).fill(0).map((_, key) => (
@@ -55,9 +38,9 @@ const AuctionListPage = () => {
 
   return (
     <div className="flex w-full flex-1 flex-col">
-      {auctions.length > 0 ? (
+      {data?.length > 0 ? (
         <div className="container my-6 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {auctions.map((auction) => (
+          {data.map((auction: Auction) => (
             <AuctionItem key={auction._id} auction={auction} />
           ))}
         </div>

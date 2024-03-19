@@ -32,7 +32,7 @@ const Navbar: React.FC<IProps> = (props) => {
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+          <div className="container">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                 <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
@@ -47,7 +47,7 @@ const Navbar: React.FC<IProps> = (props) => {
               </div>
               <div className="ml-10 flex flex-1 items-center sm:ml-0 sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
-                  <Link to="/" className="mx-5 lg:mx-0">
+                  <Link to="/" className="mr-5 lg:mx-0">
                     <img className="h-12 w-auto" src={Logo} alt="logo" />
                   </Link>
                 </div>

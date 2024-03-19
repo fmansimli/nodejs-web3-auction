@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { Auction } from "../../models/auction";
+import web3 from "../../web3/web3";
 
 interface IProps {
   auction: Auction;
@@ -16,7 +17,7 @@ const AuctionItem: React.FC<IProps> = (props) => {
         </div>
         <div className="flex items-center justify-between">
           <span className="text-3xl font-bold text-gray-900 dark:text-white">
-            {props.auction.basePrice} ETH
+            {web3.utils.fromWei(props.auction.basePrice, "ether")} ETH
           </span>
           <Link
             to={`/auctions/${props.auction._id}`}

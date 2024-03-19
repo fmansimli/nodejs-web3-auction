@@ -43,7 +43,7 @@ export const createBulk: RequestHandler = async (req, res, next) => {
         title: "auction title " + (index + 1),
         address: "0x00000000000000000000000000",
         desc: "auction desc " + (index + 1),
-        basePrice: (index + 1) * 100
+        basePrice: (index + 1) * 1000000000000000
       });
 
       return auction;
