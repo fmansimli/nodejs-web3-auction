@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
+import type { Auction } from "../../models/auction";
 
 interface IProps {
-  auction: any;
+  auction: Auction;
 }
 
 const AuctionItem: React.FC<IProps> = (props) => {

@@ -8,6 +8,7 @@ import Navbar from "./components/_common/Navbar";
 import HomePage from "./pages/HomePage";
 import SignInPage from "./pages/auth/SignInPage";
 import SignUpPage from "./pages/auth/SignUpPage";
+import AuctionListPage from "./pages/auctions/AuctionListPage";
 import AuctionDetailPage from "./pages/auctions/AuctionDetailPage";
 import NewAuctionPage from "./pages/auctions/NewAuctionPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -59,8 +60,11 @@ function App() {
                   <Route path="/" element={<HomePage />} />
                   <Route path="/auth/signin" element={<SignInPage />} />
                   <Route path="/auth/signup" element={<SignUpPage />} />
-                  <Route path="/auctions/new" element={<NewAuctionPage />} />
+
+                  <Route path="/auctions" element={<AuctionListPage />} />
                   <Route path="/auctions/:id" element={<AuctionDetailPage />} />
+                  <Route path="/auctions/new" element={<NewAuctionPage />} />
+
                   <Route path="/about" element={<AboutPage />} />
                   <Route path="*" element={<NotFoundPage />} />
                 </Routes>

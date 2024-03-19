@@ -141,6 +141,7 @@ contract Auction {
     }
 
     struct Summary {
+        address _id;
         string title;
         address creator;
         uint256 basePrice;
@@ -149,8 +150,17 @@ contract Auction {
         Bid[] bids;
     }
 
+    struct BasicInfo {
+        address _id;
+        string title;
+        uint256 basePrice;
+        uint256 finishTime;
+        bool completed;
+    }
+
     function getSummary() public view returns (Summary memory) {
         Summary memory summary = Summary({
+            _id: address(this),
             title: title,
             creator: creator,
             basePrice: basePrice,
@@ -160,5 +170,17 @@ contract Auction {
         });
 
         return summary;
+    }
+
+    function getBasicInfo() public view returns (BasicInfo memory) {
+        BasicInfo memory info = BasicInfo({
+            _id: address(this),
+            title: title,
+            basePrice: basePrice,
+            finishTime: finishTime,
+            completed: completed
+        });
+
+        return info;
     }
 }

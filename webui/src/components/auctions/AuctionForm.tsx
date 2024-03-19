@@ -56,7 +56,8 @@ const AuctionForm: React.FC<IProps> = (props) => {
               placeholder="base price (eth)"
               name="basePrice"
               type="number"
-              label="Base Price"
+              step={0.001}
+              label="Base Price (in ETH)"
               autoComplete="off"
             />
 

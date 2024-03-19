@@ -9,6 +9,7 @@ import AvatarImg from "../../assets/images/hacker.png";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
+  { name: "Auctions", href: "/auctions", current: false },
   { name: "About", href: "/about", current: false }
 ];
 
