@@ -37,7 +37,7 @@ contract Auction {
     string public title;
     uint256 public basePrice;
     mapping(address => uint256) public bidders;
-    uint256 public finishTime = block.timestamp + 1800000;
+    uint256 public finishTime = block.timestamp + 64800;
     address payable public creator;
     bool public completed;
     Bid[] public bids;

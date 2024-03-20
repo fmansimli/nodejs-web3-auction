@@ -29,7 +29,7 @@ const AuctionListPage = () => {
   if (error) {
     return (
       <div className="flex w-full flex-1 items-center justify-center">
-        <div className="text-xl text-red-600">
+        <div className="container text-xl text-red-600">
           <div>{error.message}</div>
         </div>
       </div>
