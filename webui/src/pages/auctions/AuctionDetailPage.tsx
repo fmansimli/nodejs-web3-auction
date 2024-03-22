@@ -292,7 +292,7 @@ const AuctionDetailPage = () => {
         onLeftButtonClick={() => null}
         onRightButtonClick={() => setErrorText("")}
         rightButtonText="ok, got it.">
-        <div className="my-5 text-black dark:text-white">
+        <div className="my-8 text-center text-black dark:text-white">
           <div>{errorText}</div>
         </div>
       </MyDialog>

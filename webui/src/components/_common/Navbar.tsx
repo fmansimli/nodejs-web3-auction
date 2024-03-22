@@ -8,9 +8,9 @@ import Logo from "../../assets/images/logo.png";
 import AvatarImg from "../../assets/images/hacker.png";
 
 const navigation = [
-  { name: "Home", href: "/", current: true },
-  { name: "Auctions", href: "/auctions", current: false },
-  { name: "About", href: "/about", current: false }
+  { name: "Home", href: "/", current: false },
+  { name: "About", href: "/about", current: false },
+  { name: "Contact", href: "/contact", current: false }
 ];
 
 function classNames(...classes: any) {
@@ -71,7 +71,7 @@ const Navbar: React.FC<IProps> = (props) => {
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <div className="mx-5">
+                <div className="mx-3 sm:mx-5">
                   <ThemeSwitcher />
                 </div>
 
@@ -79,7 +79,7 @@ const Navbar: React.FC<IProps> = (props) => {
                   <>
                     <Link
                       to="/auctions/new"
-                      className="mr-3 flex items-center gap-1 rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700">
+                      className="mr-2 flex items-center gap-1 rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 sm:mr-3 sm:px-4">
                       <PlusCircleIcon className="block h-4 w-4" />
                       <span>new</span>
                     </Link>
@@ -107,26 +107,26 @@ const Navbar: React.FC<IProps> = (props) => {
                         <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                           <Menu.Item>
                             {({ active }) => (
-                              <a
-                                href="#"
+                              <Link
+                                to="/account/profile"
                                 className={classNames(
                                   active ? "bg-gray-100" : "",
                                   "block px-4 py-2 text-sm text-gray-700"
                                 )}>
                                 Your Profile
-                              </a>
+                              </Link>
                             )}
                           </Menu.Item>
                           <Menu.Item>
                             {({ active }) => (
-                              <a
-                                href="#"
+                              <Link
+                                to="/account/settings"
                                 className={classNames(
                                   active ? "bg-gray-100" : "",
                                   "block px-4 py-2 text-sm text-gray-700"
                                 )}>
                                 Settings
-                              </a>
+                              </Link>
                             )}
                           </Menu.Item>
                           <Menu.Item>

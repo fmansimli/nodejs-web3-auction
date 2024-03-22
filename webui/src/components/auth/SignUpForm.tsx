@@ -9,7 +9,7 @@ interface IProps {
   onSubmit: (values: any) => Promise<void>;
 }
 
-const SignInForm: React.FC<IProps> = (props) => {
+const SignUpForm: React.FC<IProps> = (props) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -39,7 +39,7 @@ const SignInForm: React.FC<IProps> = (props) => {
       <div className="w-full rounded-lg bg-white shadow dark:border dark:border-gray-700 dark:bg-gray-800 md:mt-0 xl:p-0">
         <div className="space-y-4 p-6 sm:p-8 md:space-y-6">
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
-            Sign in to your account
+            Sign up
           </h1>
           <form onSubmit={onSubmitHandle} className="space-y-4 md:space-y-6">
             <MyInput
@@ -60,44 +60,22 @@ const SignInForm: React.FC<IProps> = (props) => {
               autoComplete="off"
               defaultValue="MyExtremePassword"
             />
-            <div className="flex items-center justify-between">
-              <div className="flex items-start">
-                <div className="flex h-5 items-center">
-                  <input
-                    id="remember"
-                    aria-describedby="remember"
-                    type="checkbox"
-                    className="focus:ring-3 h-4 w-4 rounded border border-gray-300 bg-gray-50 focus:ring-primary-300 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-primary-600"
-                  />
-                </div>
-                <div className="ml-3 text-sm">
-                  <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">
-                    Remember me
-                  </label>
-                </div>
-              </div>
-              <Link
-                to="/"
-                className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
-                forgot password?
-              </Link>
-            </div>
             <button
               type="submit"
               className="w-full rounded-lg bg-primary-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-              {loading ? "processing..." : "Sign in"}
+              {loading ? "processing..." : "Sign up"}
             </button>
             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-              Don’t have an account yet? &nbsp;
+              already have an account? &nbsp;
               <Link
-                to="/auth/signup"
+                to="/auth/signin"
                 className="font-medium text-primary-600 hover:underline dark:text-primary-500">
-                Sign up
+                Sign in
               </Link>
             </p>
           </form>
           {message && (
-            <div className="mt-8 text-red-800">
+            <div className="mt-5">
               <Alert>{message}</Alert>
             </div>
           )}
@@ -107,4 +85,4 @@ const SignInForm: React.FC<IProps> = (props) => {
   );
 };
 
-export default SignInForm;
+export default SignUpForm;

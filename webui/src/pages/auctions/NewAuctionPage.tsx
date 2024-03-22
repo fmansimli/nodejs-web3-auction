@@ -17,7 +17,7 @@ const NewAuctionPage = () => {
         from: signers[0]
       });
 
-      return navigate("/auctions");
+      return navigate("/");
     } catch (error: any) {
       return Promise.reject(error);
     }
