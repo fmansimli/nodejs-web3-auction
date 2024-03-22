@@ -25,7 +25,5 @@ export const catchError: ErrorRequestHandler = (err, req, res, _next) => {
       httpCode: 500,
       message: "unknown error"
     });
-  } finally {
-    console.log(err);
   }
 };
