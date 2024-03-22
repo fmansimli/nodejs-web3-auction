@@ -77,7 +77,7 @@ const SignInForm: React.FC<IProps> = (props) => {
                 </div>
               </div>
               <Link
-                to="/"
+                to="/auth/forgot-password"
                 className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
                 forgot password?
               </Link>

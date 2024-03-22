@@ -9,6 +9,7 @@ import Loading from "./components/Loading";
 import HomePage from "./pages/HomePage";
 import SignInPage from "./pages/auth/SignInPage";
 import SignUpPage from "./pages/auth/SignUpPage";
+import ForgetPasswordPage from "./pages/auth/ForgetPasswordPage";
 import AuctionDetailPage from "./pages/auctions/AuctionDetailPage";
 import NewAuctionPage from "./pages/auctions/NewAuctionPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -53,7 +54,7 @@ function App() {
   return (
     <BrowserRouter>
       <SWRConfig value={defaultValues}>
-        <div className="flex min-h-screen w-screen flex-col bg-white font-mono dark:bg-gray-900">
+        <div className="flex min-h-screen w-screen flex-col bg-white font-mono dark:bg-gray-800">
           {authData.initialized ? (
             <>
               <div className="sticky top-0 w-full">
@@ -75,6 +76,15 @@ function App() {
                     element={
                       <UnProtected unmount={!!authData.user}>
                         <SignUpPage />
+                      </UnProtected>
+                    }
+                  />
+
+                  <Route
+                    path="/auth/forgot-password"
+                    element={
+                      <UnProtected unmount={!!authData.user}>
+                        <ForgetPasswordPage />
                       </UnProtected>
                     }
                   />

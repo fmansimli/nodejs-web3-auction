@@ -29,7 +29,7 @@ const Navbar: React.FC<IProps> = (props) => {
   }
 
   return (
-    <Disclosure as="nav" className="bg-gray-800">
+    <Disclosure as="nav" className="border-b-0 border-gray-700 bg-gray-800 dark:border-b">
       {({ open }) => (
         <>
           <div className="container">
