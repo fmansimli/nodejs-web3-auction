@@ -3,23 +3,15 @@ import CountDown from "../CountDown";
 import { ClockIcon } from "@heroicons/react/24/outline";
 
 interface IProps {
-  onBid: () => Promise<void>;
+  onBid: () => void;
   secondsLeft: number;
 }
 
 const MakeBid: React.FC<IProps> = (props) => {
-  const [processing, setProcessing] = useState(false);
   const [timeEnded, setTimeEnded] = useState(false);
 
-  async function makeBid() {
-    try {
-      setProcessing(true);
-      await props.onBid();
-    } catch (error) {
-      //
-    } finally {
-      setProcessing(false);
-    }
+  function makeBid() {
+    props.onBid();
   }
 
   return (
@@ -39,9 +31,9 @@ const MakeBid: React.FC<IProps> = (props) => {
 
       <button
         onClick={makeBid}
-        disabled={processing || timeEnded}
+        disabled={timeEnded}
         className="inline-flex w-full justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-200 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">
-        {processing ? "Processing...." : "Place a Bid"}
+        Place a Bid
       </button>
     </div>
   );

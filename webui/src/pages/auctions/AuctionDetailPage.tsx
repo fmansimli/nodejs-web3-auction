@@ -6,21 +6,28 @@ import Lottie from "lottie-react";
 import type { Contract } from "web3";
 import type { Auction } from "../../models/auction";
 
+import MyDialog from "../../components/MyDialog";
 import Loading from "../../components/Loading";
 import BidList from "../../components/bids/BidList";
 import MakeBid from "../../components/bids/MakeBid";
 import CopyClipboard from "../../components/CopyClipboard";
+import LiveSign from "../../components/LiveSign";
 import NotFoundLottie from "../../assets/lotties/notfound.json";
+import EthereumLottie from "../../assets/lotties/diamond.json";
 
 import web3 from "../../web3/web3";
 import AuctionCont from "../../web3/auction";
+import MyInput from "../../components/ui/MyInput";
 
 const AuctionDetailPage = () => {
   const params = useParams();
   const [contract] = useState<Contract<any>>(AuctionCont.from(params.id!));
   const [accounts, setAccounts] = useState<string[]>([]);
+  const [ethModalIsOpen, setEthModalIsOpen] = useState(false);
+  const [errorText, setErrorText] = useState("");
+  const [processing, setProcessing] = useState(false);
 
-  const { data, error, isLoading, mutate } = useSWR<Auction, any, any>("/:id", getSumary);
+  const { data, error, isLoading, mutate } = useSWR<Auction, any, any>(params.id, getSumary);
 
   useEffect(() => {
     if ((window as any).ethereum) {
@@ -50,31 +57,50 @@ const AuctionDetailPage = () => {
     }
   }
 
-  async function makeBid() {
+  async function modalHandler() {
     try {
-      const _amount = window.prompt("enter the amount in ether.");
-      const amount = parseFloat(_amount || "");
+      const ethers = (document.getElementById("ethers") as HTMLInputElement).value;
+      setEthModalIsOpen(false);
 
-      if (isNaN(amount)) {
-        alert("incorrect input!");
+      if (isNaN(parseFloat(ethers))) {
+        setErrorText("incorrect input!");
         return;
       }
+      await makeBid(ethers);
+    } catch (error: any) {
+      setErrorText(error.message);
+    }
+  }
+
+  async function makeBid(ethers: string) {
+    try {
+      setProcessing(true);
 
       const signers = await web3.eth.getAccounts();
       const remain = await contract.methods
-        .getAmountForBid(web3.utils.toWei(String(amount), "ether"))
+        .getAmountForBid(web3.utils.toWei(ethers, "ether"))
         .call({ from: signers[0] });
-
-      alert(remain + " || " + signers[0]);
 
       await contract.methods.makeBid().send({
         value: String(remain),
         from: signers[0]
       });
+      setProcessing(false);
 
       mutate();
     } catch (error: any) {
-      alert(error.message);
+      setProcessing(false);
+      setErrorText(error.message);
+    }
+  }
+
+  async function withdraw() {
+    try {
+      const signers = await web3.eth.getAccounts();
+      await contract.methods.withdraw().send({ from: signers[0] });
+      mutate();
+    } catch (error: any) {
+      setErrorText(error.message);
     }
   }
 
@@ -84,7 +110,7 @@ const AuctionDetailPage = () => {
       await contract.methods.finish().send({ from: signers[0] });
       mutate();
     } catch (error: any) {
-      alert(error.message);
+      setErrorText(error.message);
     }
   }
 
@@ -106,80 +132,44 @@ const AuctionDetailPage = () => {
     <div className="flex w-full flex-1">
       <div className="container my-10 flex flex-1 flex-col gap-20 lg:flex-row">
         <div className="flex flex-1 flex-col gap-8">
-          <div>
-            <div className="text-3xl font-bold text-black dark:text-white">
-              <h1 onClick={getAccounts}>{data?.title}</h1>
+          <div className="flex items-center justify-between ">
+            <div className="flex items-center gap-3">
+              <div className="text-lg font-bold text-black dark:text-white lg:text-2xl">
+                <h1 onClick={getAccounts}>{data?.title}</h1>
+              </div>
             </div>
+
+            {accounts[0] !== data?.lastBidder && accounts[0] !== data?.creator && (
+              <div className="space-x-5">
+                <button
+                  onClick={withdraw}
+                  className=" justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">
+                  withdraw
+                </button>
+              </div>
+            )}
+
+            {accounts[0] === data?.creator && !data.completed && (
+              <div className="space-x-5">
+                <button
+                  onClick={finishTheAuction}
+                  className=" justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">
+                  finish
+                </button>
+              </div>
+            )}
           </div>
-          <div className="text-md text-black dark:text-white">
-            <div>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum, dolor sit
-              amet consectetur adipisicing elit. Id, corrupti suscipit qui quidem minima nulla?
-            </div>
-          </div>
+
           <div className="text-gray-900 dark:text-white">
             <MakeBid
               key={Math.random()}
-              onBid={makeBid}
+              onBid={() => setEthModalIsOpen(true)}
               secondsLeft={Number(data?.finishTime) - Math.floor(Date.now() / 1000)}
             />
           </div>
-          <div className="mt-5 text-gray-900 dark:text-white">
-            <h5 className="text-lg font-bold">Details</h5>
-            <div className="mt-5 space-y-4">
-              <div className="flex items-center space-x-5">
-                <span>Address:</span>
-                <div>
-                  <span className="text-blue-700 dark:text-white">
-                    {data?._id.substring(0, 20)}...
-                  </span>
-                  <span className="ml-3">
-                    <CopyClipboard text={data?._id} />
-                  </span>
-                </div>
-              </div>
 
-              <div className="space-x-5">
-                <span>Created:</span>
-                <span>{new Date(Number(data?.finishTime) * 1000).toDateString()}</span>
-              </div>
-
-              {accounts[0] === data?.creator && !data.completed && (
-                <div className="space-x-5">
-                  <button
-                    onClick={finishTheAuction}
-                    className=" justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">
-                    finish
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-1 flex-col gap-8">
-          <div className="text-gray-900 dark:text-white">
-            <h5 className="mb-3 text-lg font-bold">Info:</h5>
-            <div className="mb-2 flex items-center gap-3">
-              <span>Seller:</span>
-              <div className="flex items-center gap-3">
-                <span className="text-blue-700 dark:text-white">
-                  {data?.creator.substring(0, 18)}...
-                </span>
-                <CopyClipboard text={data?.creator} />
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <span>Etherscan:</span>
-              <div className="flex items-center gap-3">
-                <span className="text-blue-700 dark:text-white"></span>
-              </div>
-            </div>
-          </div>
-          <div className="flex animate-bounce items-center gap-3 rounded-md border p-5 text-gray-900 shadow dark:text-white">
-            <span className="relative flex h-4 w-4">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
-              <span className="relative inline-flex h-4 w-4 rounded-full bg-sky-500"></span>
-            </span>
+          <div className="flex animate-bounce items-center gap-3 rounded-lg border border-gray-200 p-5 text-gray-900 shadow dark:border-gray-700  dark:text-white">
+            <LiveSign />
 
             <span className="font-bold">
               {data?.bids.length! > 0 && data?.completed
@@ -193,23 +183,65 @@ const AuctionDetailPage = () => {
               {web3.utils.fromWei(String(data?.basePrice), "ether")} ETH
             </span>
             {data?.bids.length! > 0 && (
-              <div className="mx-2 flex items-center gap-3">
-                <span className="text-blue-700 dark:text-white">
-                  {"("}
-                  {data?.bids.at(-1)?.owner.substring(0, 10)}...
-                </span>
+              <div className="mx-2 flex items-center gap-1 lg:gap-3">
+                {window.innerWidth > 400 ? (
+                  <span className="text-blue-700 dark:text-white">
+                    {data?.bids.at(-1)?.owner.substring(0, window.innerWidth < 400 ? 4 : 10)}
+                    ...
+                  </span>
+                ) : (
+                  "0x..."
+                )}
                 <span>
                   <CopyClipboard text={data?.bids.at(-1)?.owner} />
-                  <span className="text-blue-700 dark:text-white">{")"}</span>
+                  <span className="text-blue-700 dark:text-white"></span>
                 </span>
               </div>
             )}
           </div>
-          <div className="" />
+
+          <div className="flex flex-col gap-2 text-gray-900 dark:text-white">
+            <h5 className="mb-3 text-lg font-bold">Info:</h5>
+            <div className="flex items-center gap-3">
+              <span className="">Seller:&nbsp;&nbsp;&nbsp;</span>
+              <div className="flex items-center gap-3">
+                <span className="text-blue-700 dark:text-white">
+                  {data?.creator.substring(0, Math.floor(window.innerWidth / 30))}...
+                </span>
+                <CopyClipboard text={data?.creator} />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="">Contract:&nbsp;</span>
+              <div>
+                <span className="text-blue-700 dark:text-white">
+                  {data?._id.substring(0, Math.floor(window.innerWidth / 30))}...
+                </span>
+                <span className="ml-3">
+                  <CopyClipboard text={data?._id} />
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="">Etherscan:</span>
+              <a href="https://etherscan.io/" className="text-blue-600 hover:underline">
+                view on etherscan
+              </a>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="">Created: &nbsp;</span>
+              <span>{new Date(Number(data?.finishTime) * 1000).toDateString()}</span>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-1 flex-col gap-8">
           <div className="text-gray-900 dark:text-white">
             <h5 className="mb-3 text-lg font-bold">Bids:</h5>
             {data?.bids.length! > 0 ? (
-              <BidList bids={data?.bids.reverse() || []} />
+              <BidList bids={data!.bids || []} />
             ) : (
               <div className="flex flex-col items-center justify-center gap-5">
                 <div className="my-5 w-1/2">
@@ -221,8 +253,61 @@ const AuctionDetailPage = () => {
               </div>
             )}
           </div>
+
+          <div className="text-md mt-10 text-black dark:text-white">
+            <h5 className="mb-3 text-lg font-bold">Description:</h5>
+            <div>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum, dolor sit
+              amet consectetur adipisicing elit. Id, corrupti suscipit qui quidem minima nulla?
+            </div>
+          </div>
         </div>
       </div>
+
+      <MyDialog
+        open={ethModalIsOpen}
+        title=""
+        hasLeftButton
+        hasRightButton
+        onLeftButtonClick={() => setEthModalIsOpen(false)}
+        onRightButtonClick={modalHandler}
+        leftButtonText="cancel"
+        rightButtonText="confirm">
+        <div className="my-5">
+          <MyInput
+            type="number"
+            id="ethers"
+            step={0.001}
+            min={0}
+            label="Amount Price (in ETH)"
+          />
+        </div>
+      </MyDialog>
+
+      <MyDialog
+        open={!!errorText}
+        title="info!"
+        hasLeftButton={false}
+        hasRightButton
+        onLeftButtonClick={() => null}
+        onRightButtonClick={() => setErrorText("")}
+        rightButtonText="ok, got it.">
+        <div className="my-5 text-black dark:text-white">
+          <div>{errorText}</div>
+        </div>
+      </MyDialog>
+
+      <MyDialog
+        open={processing}
+        title=""
+        hasLeftButton={false}
+        hasRightButton={false}
+        onLeftButtonClick={() => null}
+        onRightButtonClick={() => null}>
+        <div className="flex h-full w-full items-center justify-center">
+          <Lottie className="max-w-52" animationData={EthereumLottie} />
+        </div>
+      </MyDialog>
     </div>
   );
 };

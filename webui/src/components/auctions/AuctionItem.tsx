@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import type { Auction } from "../../models/auction";
 import web3 from "../../web3/web3";
+import type { Auction } from "../../models/auction";
+import LiveSign from "../LiveSign";
 
 interface IProps {
   auction: Auction;
@@ -8,12 +9,17 @@ interface IProps {
 
 const AuctionItem: React.FC<IProps> = (props) => {
   return (
-    <div className="w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-800">
+    <div className="w-full rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-800">
       <div className="px-5 pb-5">
-        <div className="my-5">
+        <div className="my-5 flex items-center gap-5">
           <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
             {props.auction.title}
           </h5>
+          {!props.auction.completed && (
+            <div>
+              <LiveSign />
+            </div>
+          )}
         </div>
         <div className="flex items-center justify-between">
           <span className="text-3xl font-bold text-gray-900 dark:text-white">

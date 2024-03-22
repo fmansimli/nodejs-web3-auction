@@ -19,7 +19,7 @@ const BidList: React.FC<IProps> = (props) => {
           <div className="flex">
             <div className="leading-7">
               <span className="flex items-center">
-                <span className="mr-3">{bid.owner.substring(0, 20)}...</span>
+                <span className="mr-3">{bid.owner.substring(0, 18)}...</span>
                 <CopyClipboard text={bid.owner} />
               </span>
               made a bid with the amount of {Convert.toEth(String(bid.amount))} eth.

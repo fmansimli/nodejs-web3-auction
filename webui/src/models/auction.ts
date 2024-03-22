@@ -7,6 +7,7 @@ export class Auction {
   public completed: boolean;
   public finishTime: number;
   public creator: string;
+  public lastBidder: string;
   public bids: Bid[];
 
   constructor(attrs: Partial<Auction>) {

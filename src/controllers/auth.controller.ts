@@ -20,8 +20,8 @@ export const signin: RequestHandler = async (req, res, next) => {
     }
 
     const payload = { email, id: user._id, roles: ["0", "9"] };
-    const accessToken = Jwt.signAsync(payload, "1h");
-    const refreshToken = Jwt.signAsync(payload, "12h");
+    const accessToken = Jwt.signAsync(payload, "4h");
+    const refreshToken = Jwt.signAsync(payload, "24h");
 
     res.status(200).json({
       user: {
@@ -49,8 +49,8 @@ export const signup: RequestHandler = async (req, res, next) => {
     const resp = await User.exec().insertOne({ email, password: hashed });
 
     const payload = { email, id: resp.insertedId, roles: ["0", "9"] };
-    const accessToken = Jwt.signAsync(payload, "1h");
-    const refreshToken = Jwt.signAsync(payload, "12h");
+    const accessToken = Jwt.signAsync(payload, "4h");
+    const refreshToken = Jwt.signAsync(payload, "24h");
 
     res.status(200).json({
       user: {
@@ -67,7 +67,7 @@ export const signup: RequestHandler = async (req, res, next) => {
 export const anonymous: RequestHandler = async (req, res, next) => {
   try {
     const payload = { id: "", roles: ["0"] };
-    const accessToken = Jwt.signAsync(payload, "1h");
+    const accessToken = Jwt.signAsync(payload, "4h");
 
     res.status(200).json({ user: null, auth: { accessToken } });
   } catch (error) {

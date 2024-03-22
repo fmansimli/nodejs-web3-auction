@@ -5,8 +5,9 @@ contract Auction {
     string public title;
     uint256 public basePrice;
     mapping(address => uint256) public bidders;
-    uint256 public finishTime = block.timestamp + 64800;
+    uint256 public finishTime = block.timestamp + 18 hours;
     address payable public creator;
+    address public lastBidder;
     bool public completed;
     Bid[] public bids;
 
@@ -43,7 +44,7 @@ contract Auction {
         return block.timestamp;
     }
 
-    function finish() public onlyCreator {
+    function finish() external onlyCreator {
         if (block.timestamp >= finishTime) {
             completed = true;
 
@@ -55,8 +56,8 @@ contract Auction {
         revert("auction still continue.");
     }
 
-    function withdraw() public {
-        require(bids.length > 0, "you did not bid any amount!");
+    function withdraw() external {
+        require(bids.length > 0, "there is no withdraw for you.");
 
         if (block.timestamp >= finishTime) {
             completed = true;
@@ -64,7 +65,7 @@ contract Auction {
             Bid storage lastBid = bids[bids.length - 1];
 
             if (lastBid.owner == msg.sender) {
-                require(false, "you can not withdraw, you won the auction!");
+                require(false, "you can not withdraw, you're winner!");
             }
 
             uint256 amount = bidders[msg.sender];
@@ -74,12 +75,12 @@ contract Auction {
                 bidders[msg.sender] = 0;
                 return;
             }
-            revert("you did not bid any amount.");
+            revert("there is no withdraw for you.");
         }
         revert("auction still continue.");
     }
 
-    function makeBid() public payable timeCheck onlyHigh {
+    function makeBid() external payable timeCheck onlyHigh {
         require(msg.sender != creator, "owner of auction can not bid!");
 
         bidders[msg.sender] += msg.value;
@@ -89,7 +90,8 @@ contract Auction {
         bids.push(newbid);
 
         basePrice = _amount;
-        finishTime = block.timestamp + 300;
+        lastBidder = msg.sender;
+        finishTime = block.timestamp + 150;
     }
 
     function getLastBid() public view returns (Bid memory) {
@@ -114,6 +116,7 @@ contract Auction {
         address creator;
         uint256 basePrice;
         uint256 finishTime;
+        address lastBidder;
         bool completed;
         Bid[] bids;
     }
@@ -134,6 +137,7 @@ contract Auction {
             basePrice: basePrice,
             finishTime: finishTime,
             completed: completed,
+            lastBidder: lastBidder,
             bids: bids
         });
 
