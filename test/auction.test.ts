@@ -36,10 +36,10 @@ describe("Auction Contract", () => {
       const blockTime = await time.latest();
       const finishTime = await auction.finishTime();
 
-      const HALF_OF_HOUR = 1800000;
+      const T_18_MINUTES = 64800;
 
       expect(finishTime).to.be.greaterThan(blockTime);
-      expect(Number(finishTime) - blockTime).to.be.closeTo(HALF_OF_HOUR, 1);
+      expect(Number(finishTime) - blockTime).to.be.closeTo(T_18_MINUTES, 1);
     });
   });
 
