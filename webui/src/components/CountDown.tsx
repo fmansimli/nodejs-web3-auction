@@ -17,8 +17,6 @@ const CountDown: React.FC<IProps> = (props) => {
     }
   }, [time]);
 
-  console.log("re-rendering");
-
   useEffect(() => {
     if (time <= 0) return;
 

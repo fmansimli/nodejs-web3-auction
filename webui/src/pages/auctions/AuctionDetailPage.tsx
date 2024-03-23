@@ -1,23 +1,32 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import useSWR from "swr";
 
 import Lottie from "lottie-react";
 import type { Contract } from "web3";
 import type { Auction } from "../../models/auction";
+import { toast } from "react-toastify";
 
+import MyInput from "../../components/ui/MyInput";
 import MyDialog from "../../components/MyDialog";
 import Loading from "../../components/Loading";
 import BidList from "../../components/bids/BidList";
 import MakeBid from "../../components/bids/MakeBid";
 import CopyClipboard from "../../components/CopyClipboard";
 import LiveSign from "../../components/LiveSign";
+
 import NotFoundLottie from "../../assets/lotties/notfound.json";
 import EthereumLottie from "../../assets/lotties/diamond.json";
 
 import web3 from "../../web3/web3";
 import AuctionCont from "../../web3/auction";
-import MyInput from "../../components/ui/MyInput";
+import * as ethSocket from "../../sockets/eth.socket";
+import { authSelector } from "../../state/auth.state";
+
+function formatMessage(signer: string, ethers: string) {
+  return `${signer.substring(0, 7)}... made a bid with the amount of ${ethers} ethers`;
+}
 
 const AuctionDetailPage = () => {
   const params = useParams();
@@ -26,6 +35,9 @@ const AuctionDetailPage = () => {
   const [ethModalIsOpen, setEthModalIsOpen] = useState(false);
   const [errorText, setErrorText] = useState("");
   const [processing, setProcessing] = useState(false);
+  const [socketSize, setSocketSize] = useState(0);
+
+  const authData = useRecoilValue(authSelector);
 
   const { data, error, isLoading, mutate } = useSWR<Auction, any, any>(params.id, getSumary);
 
@@ -38,6 +50,33 @@ const AuctionDetailPage = () => {
         getAccounts();
       });
     }
+  }, []);
+
+  useEffect(() => {
+    ethSocket.init(authData.accessToken!, (succ) => {
+      if (succ) {
+        ethSocket.joinRoom({ room: params.id! }, (size) => {
+          setSocketSize(size);
+
+          ethSocket.onNewBid((data) => {
+            toast(formatMessage(data.signer, data.ethers), {
+              type: "info"
+            });
+          });
+
+          ethSocket.onNewUserJoined((data) => {
+            setSocketSize(data.size);
+            toast("someone joined!", { type: "info" });
+          });
+        });
+
+        return;
+      }
+    });
+
+    return () => {
+      ethSocket.disconnect((succ) => succ);
+    };
   }, []);
 
   useEffect(() => {
@@ -67,6 +106,7 @@ const AuctionDetailPage = () => {
         return;
       }
       await makeBid(ethers);
+      ethSocket.emitNewBid({ ethers, signer: accounts[0], room: params.id! });
     } catch (error: any) {
       setErrorText(error.message);
     }
@@ -135,7 +175,9 @@ const AuctionDetailPage = () => {
           <div className="flex items-center justify-between ">
             <div className="flex items-center gap-3">
               <div className="text-lg font-bold text-black dark:text-white lg:text-2xl">
-                <h1 onClick={getAccounts}>{data?.title}</h1>
+                <h1 onClick={getAccounts}>
+                  {data?.title} ({socketSize})
+                </h1>
               </div>
             </div>
 

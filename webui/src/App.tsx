@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValueLoadable } from "recoil";
 import { SWRConfig } from "swr";
+import { ToastContainer } from "react-toastify";
 
 import Navbar from "./components/_common/Navbar";
 import Loading from "./components/Loading";
@@ -127,6 +128,15 @@ function App() {
           ) : (
             <Loading visible />
           )}
+
+          <ToastContainer
+            autoClose={2000}
+            closeOnClick
+            closeButton
+            stacked={false}
+            newestOnTop
+            draggable
+          />
         </div>
       </SWRConfig>
     </BrowserRouter>

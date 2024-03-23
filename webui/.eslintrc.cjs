@@ -23,6 +23,7 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-var-requires": "off",
     "no-undef": "off",
+    "no-empty": "off",
     "no-constant-condition": "off"
   }
 };

@@ -20,7 +20,7 @@ if (!MONGO_URI) {
 
 async function bootstrap() {
   try {
-    const _data = await mongo.connect(MONGO_URI as string);
+    await mongo.connect(MONGO_URI as string);
 
     httpServer.listen(PORT, () => {
       AppSocket.initialize(httpServer);

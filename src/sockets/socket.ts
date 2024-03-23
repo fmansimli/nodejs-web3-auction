@@ -1,17 +1,17 @@
 import { Server } from "socket.io";
-import * as webRTC from "./webrtc.socket";
+import * as eth from "./eth.socket";
 
-let io: any;
+let io: Server;
 
 export const initialize = (http: any) => {
   io = new Server(http, {
     cors: {
-      origin: ["*"],
+      origin: ["http://localhost:3001"],
       methods: ["POST", "GET"],
       credentials: true
     },
     transports: ["websocket", "polling"]
   });
 
-  webRTC.init(io);
+  eth.init(io);
 };
