@@ -130,7 +130,7 @@ function App() {
           )}
 
           <ToastContainer
-            autoClose={2000}
+            autoClose={4000}
             closeOnClick
             closeButton
             stacked={false}

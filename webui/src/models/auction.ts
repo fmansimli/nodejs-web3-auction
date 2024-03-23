@@ -6,6 +6,7 @@ export class Auction {
   public basePrice: number;
   public completed: boolean;
   public finishTime: number;
+  public blockTime: number;
   public creator: string;
   public lastBidder: string;
   public bids: Bid[];

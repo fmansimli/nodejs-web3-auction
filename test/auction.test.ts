@@ -204,7 +204,7 @@ describe("Auction Contract", () => {
       const { auction, address2 } = await loadFixture(auctionFixture);
 
       const promise = auction.connect(address2).withdraw();
-      await expect(promise).to.be.revertedWith("you did not bid any amount!");
+      await expect(promise).to.be.revertedWith("there is no withdraw for you.");
     });
 
     it("should not allow to withdraw, before a auction has finished.", async () => {
@@ -226,17 +226,17 @@ describe("Auction Contract", () => {
       await time.increaseTo(Number.MAX_SAFE_INTEGER);
 
       const promise = auction.connect(address3).withdraw();
-      await expect(promise).to.be.revertedWith("you can not withdraw, you won the auction!");
+      await expect(promise).to.be.revertedWith("you can not withdraw, you're the winner!");
     });
 
-    it("should not allow someone who didn't bid withdraw, when the auction is finished", async () => {
+    it("should not allow someone who didn't bid to withdraw, when the auction is finished", async () => {
       const { auction, address2, address3, BASE_PRICE } = await loadFixture(auctionFixture);
 
       await auction.connect(address3).makeBid({ value: BASE_PRICE * 3 });
       await time.increaseTo(Number.MAX_SAFE_INTEGER);
 
       const promise = auction.connect(address2).withdraw();
-      await expect(promise).to.be.revertedWith("you did not bid any amount.");
+      await expect(promise).to.be.revertedWith("there is no withdraw for you.");
     });
 
     it("should be able to withdraw, if auction is finished and did not win", async () => {

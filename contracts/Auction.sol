@@ -65,7 +65,7 @@ contract Auction {
             Bid storage lastBid = bids[bids.length - 1];
 
             if (lastBid.owner == msg.sender) {
-                require(false, "you can not withdraw, you're winner!");
+                require(false, "you can not withdraw, you're the winner!");
             }
 
             uint256 amount = bidders[msg.sender];
@@ -117,6 +117,7 @@ contract Auction {
         uint256 basePrice;
         uint256 finishTime;
         address lastBidder;
+        uint256 blockTime;
         bool completed;
         Bid[] bids;
     }
@@ -126,6 +127,7 @@ contract Auction {
         string title;
         uint256 basePrice;
         uint256 finishTime;
+        uint256 blockTime;
         bool completed;
     }
 
@@ -138,6 +140,7 @@ contract Auction {
             finishTime: finishTime,
             completed: completed,
             lastBidder: lastBidder,
+            blockTime: block.timestamp,
             bids: bids
         });
 
@@ -150,6 +153,7 @@ contract Auction {
             title: title,
             basePrice: basePrice,
             finishTime: finishTime,
+            blockTime: block.timestamp,
             completed: completed
         });
 

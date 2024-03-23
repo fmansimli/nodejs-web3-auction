@@ -62,11 +62,13 @@ const AuctionDetailPage = () => {
             toast(formatMessage(data.signer, data.ethers), {
               type: "info"
             });
+
+            mutate();
           });
 
           ethSocket.onNewUserJoined((data) => {
             setSocketSize(data.size);
-            toast("someone joined!", { type: "info" });
+            toast("someone joined!", { type: "info", autoClose: 2000 });
           });
         });
 
@@ -92,7 +94,7 @@ const AuctionDetailPage = () => {
       const signers = await web3.eth.getAccounts();
       setAccounts(signers);
     } catch (error: any) {
-      alert(error.message);
+      toast(error.message, { type: "error" });
     }
   }
 
@@ -102,13 +104,19 @@ const AuctionDetailPage = () => {
       setEthModalIsOpen(false);
 
       if (isNaN(parseFloat(ethers))) {
-        setErrorText("incorrect input!");
+        toast("incorrect input!", {
+          type: "warning",
+          position: "top-center",
+          autoClose: 2000
+        });
         return;
       }
       await makeBid(ethers);
+
       ethSocket.emitNewBid({ ethers, signer: accounts[0], room: params.id! });
+      toast("success!", { type: "success", position: "top-center", autoClose: 2000 });
     } catch (error: any) {
-      setErrorText(error.message);
+      toast(error.message, { type: "error" });
     }
   }
 
@@ -130,7 +138,7 @@ const AuctionDetailPage = () => {
       mutate();
     } catch (error: any) {
       setProcessing(false);
-      setErrorText(error.message);
+      return Promise.reject(error);
     }
   }
 
@@ -140,7 +148,7 @@ const AuctionDetailPage = () => {
       await contract.methods.withdraw().send({ from: signers[0] });
       mutate();
     } catch (error: any) {
-      setErrorText(error.message);
+      toast(error.message, { type: "error" });
     }
   }
 
@@ -150,7 +158,7 @@ const AuctionDetailPage = () => {
       await contract.methods.finish().send({ from: signers[0] });
       mutate();
     } catch (error: any) {
-      setErrorText(error.message);
+      toast(error.message, { type: "error" });
     }
   }
 
@@ -161,7 +169,7 @@ const AuctionDetailPage = () => {
   if (error) {
     return (
       <div className="flex w-full flex-1 items-center justify-center">
-        <div className="container">
+        <div className="container text-black dark:text-white">
           <div>{JSON.stringify(error, null, 2)}</div>
         </div>
       </div>

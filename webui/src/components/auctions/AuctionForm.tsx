@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import MyInput from "../ui/MyInput";
 import MyTextArea from "../ui/MyTextArea";
+import Alert from "../Alert";
 
 import SingImg from "../../assets/images/sign.png";
 
@@ -75,7 +76,11 @@ const AuctionForm: React.FC<IProps> = (props) => {
               {loading ? "processing..." : "Create"}
             </button>
           </form>
-          <div className="my-5 text-red-800">{message}</div>
+          {message && (
+            <div className="mt-8 text-red-800">
+              <Alert>{message}</Alert>
+            </div>
+          )}
         </div>
       </div>
     </div>

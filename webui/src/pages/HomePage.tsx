@@ -17,6 +17,7 @@ const HomePage = () => {
           title: item.title,
           basePrice: item.basePrice,
           finishTime: item.finishTime,
+          blockTime: item.blockTime,
           completed: item.completed
         });
       })

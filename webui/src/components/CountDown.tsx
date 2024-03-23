@@ -12,14 +12,6 @@ const CountDown: React.FC<IProps> = (props) => {
   const timerRef = useRef<any>(null);
 
   useEffect(() => {
-    if (time <= 0) {
-      props.onFinish();
-    }
-  }, [time]);
-
-  useEffect(() => {
-    if (time <= 0) return;
-
     timerRef.current = setInterval(() => {
       setTime((prevTime) => {
         if (prevTime === 0) {
@@ -29,10 +21,10 @@ const CountDown: React.FC<IProps> = (props) => {
           return prevTime - 1;
         }
       });
-    }, props.delta);
+    }, 1000);
 
     return () => clearInterval(timerRef.current);
-  }, []);
+  }, [props.secondsLeft]);
 
   return <div className={props.className}>{calculate(time)}</div>;
 };
