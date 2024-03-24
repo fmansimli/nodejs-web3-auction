@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.test = exports.createJwtKey = void 0;
+exports.checkJwt = exports.test = exports.createJwtKey = void 0;
 const jwt_1 = require("../services/jwt");
 const createJwtKey = async (req, res, next) => {
     try {
@@ -21,3 +21,17 @@ const test = async (req, res, next) => {
     }
 };
 exports.test = test;
+const checkJwt = async (req, res, next) => {
+    try {
+        const token = req.body.token;
+        if (token) {
+            const payload = jwt_1.Jwt.verifyAsync(token);
+            return res.status(200).json({ payload });
+        }
+        res.status(200).json({ payload: {} });
+    }
+    catch (error) {
+        next(error);
+    }
+};
+exports.checkJwt = checkJwt;

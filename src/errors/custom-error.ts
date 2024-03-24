@@ -15,6 +15,7 @@ export interface ICustomError {
 
 export interface IError {
   httpCode: number;
+  name?: string;
   message?: string;
   errors?: Array<{
     message?: string;

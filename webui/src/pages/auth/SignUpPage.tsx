@@ -16,7 +16,7 @@ const SignUpPage = () => {
       const { user, auth } = data;
 
       setAuth({ user, initialized: true, accessToken: auth.accessToken });
-      localStorage.setItem("token", auth.accessToken);
+      localStorage.setItem("ethtoken", auth.accessToken);
       http.defaults.headers["Authorization"] = "Bearer " + auth.accessToken;
 
       return navigate("/");

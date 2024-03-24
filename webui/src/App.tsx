@@ -48,7 +48,7 @@ function App() {
   onMatchMedia();
 
   function logoutHandler(): void {
-    localStorage.removeItem("token");
+    localStorage.removeItem("ethtoken");
     setAuth({ user: null, initialized: true, accessToken: "" });
   }
 

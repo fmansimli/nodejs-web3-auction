@@ -5,7 +5,13 @@ export class Jwt {
     return verify(token, process.env.JWT_SECRET as string);
   }
 
-  static signAsync(payload: any, expiresIn = "1h") {
+  static verifyAndIgnore(token: string) {
+    return verify(token, process.env.JWT_SECRET as string, {
+      ignoreExpiration: true
+    });
+  }
+
+  static signAsync(payload: any, expiresIn: string | number = 5) {
     return sign(payload, process.env.JWT_SECRET as string, { expiresIn });
   }
 

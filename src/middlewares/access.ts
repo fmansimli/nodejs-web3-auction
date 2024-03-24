@@ -1,4 +1,5 @@
 import type { Response, NextFunction } from "express";
+
 import { ForbiddenError, UnauthorizedError } from "../errors";
 import { Jwt } from "../services/jwt";
 import { Role, Errors } from "../enums";

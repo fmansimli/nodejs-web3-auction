@@ -3,6 +3,7 @@ pragma solidity ^0.8.24;
 
 contract Auction {
     string public title;
+    string public desc;
     uint256 public basePrice;
     mapping(address => uint256) public bidders;
     uint256 public finishTime = block.timestamp + 18 hours;
@@ -11,8 +12,14 @@ contract Auction {
     bool public completed;
     Bid[] public bids;
 
-    constructor(string memory _title, uint256 _basePrice, address payable _creator) {
+    constructor(
+        string memory _title,
+        string memory _desc,
+        uint256 _basePrice,
+        address payable _creator
+    ) {
         title = _title;
+        desc = _desc;
         basePrice = _basePrice;
         creator = _creator;
     }
@@ -113,6 +120,7 @@ contract Auction {
     struct Summary {
         address _id;
         string title;
+        string desc;
         address creator;
         uint256 basePrice;
         uint256 finishTime;
@@ -135,6 +143,7 @@ contract Auction {
         Summary memory summary = Summary({
             _id: address(this),
             title: title,
+            desc: desc,
             creator: creator,
             basePrice: basePrice,
             finishTime: finishTime,

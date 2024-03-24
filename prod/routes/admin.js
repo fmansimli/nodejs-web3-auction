@@ -29,5 +29,6 @@ const access_1 = require("../middlewares/access");
 const enums_1 = require("../enums");
 const router = (0, express_1.Router)();
 router.post("/sign-jwt", (0, access_1.access)(enums_1.Role.ADMIN), admin.createJwtKey);
+router.post("/check-jwt", admin.checkJwt);
 router.get("/test", (0, access_1.access)(enums_1.Role.ADMIN), admin.test);
 exports.default = router;

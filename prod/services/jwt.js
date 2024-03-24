@@ -6,7 +6,12 @@ class Jwt {
     static verifyAsync(token) {
         return (0, jsonwebtoken_1.verify)(token, process.env.JWT_SECRET);
     }
-    static signAsync(payload, expiresIn = "1h") {
+    static verifyAndIgnore(token) {
+        return (0, jsonwebtoken_1.verify)(token, process.env.JWT_SECRET, {
+            ignoreExpiration: true
+        });
+    }
+    static signAsync(payload, expiresIn = 5) {
         return (0, jsonwebtoken_1.sign)(payload, process.env.JWT_SECRET, { expiresIn });
     }
     static signKey(payload) {

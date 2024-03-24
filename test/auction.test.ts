@@ -11,8 +11,9 @@ describe("Auction Contract", () => {
 
     const TITLE = "auction1";
     const BASE_PRICE = 2000000;
+    const DESC = "desc1";
 
-    const auction = await Auction.deploy(TITLE, BASE_PRICE, owner);
+    const auction = await Auction.deploy(TITLE, DESC, BASE_PRICE, owner);
 
     return { auction, TITLE, BASE_PRICE, owner, address2, address3 };
   }

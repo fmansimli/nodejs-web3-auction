@@ -4,9 +4,23 @@
     {
       "type": "node",
       "request": "launch",
+      "restart": true,
       "name": "Debug the App",
       "program": "${workspaceFolder}/src/index.ts",
       "runtimeArgs": ["-r", "ts-node/register"],
+      "skipFiles": ["<node_internals>/**"],
+      "console": "integratedTerminal",
+      "args": ["--port", "4000"],
+      "env": {
+        "PORT": "3000"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "restart": true,
+      "name": "Start the App",
+      "program": "${workspaceFolder}/prod/index.js",
       "skipFiles": ["<node_internals>/**"],
       "console": "integratedTerminal",
       "args": ["--port", "4000"],

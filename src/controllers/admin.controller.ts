@@ -18,3 +18,18 @@ export const test: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+export const checkJwt: RequestHandler = async (req, res, next) => {
+  try {
+    const token = req.body.token;
+
+    if (token) {
+      const payload = Jwt.verifyAsync(token!);
+      return res.status(200).json({ payload });
+    }
+
+    res.status(200).json({ payload: {} });
+  } catch (error) {
+    next(error);
+  }
+};

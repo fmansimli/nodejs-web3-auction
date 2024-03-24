@@ -24,7 +24,7 @@ describe("Auction Factory Contract", () => {
     it("should create an auction", async () => {
       const { factory } = await loadFixture(auctionFixture);
 
-      await factory.createAuction("auction1", 1000, {
+      await factory.createAuction("auction1", "desc1", 1000, {
         value: hre.ethers.parseUnits("0.001", "ether")
       });
 
@@ -35,11 +35,11 @@ describe("Auction Factory Contract", () => {
     it("should retrive all auctions", async () => {
       const { factory } = await loadFixture(auctionFixture);
 
-      await factory.createAuction("auction1", 1000, {
+      await factory.createAuction("auction1", "desc1", 1000, {
         value: hre.ethers.parseUnits("0.001", "ether")
       });
 
-      await factory.createAuction("auction2", 1000, {
+      await factory.createAuction("auction2", "desc1", 1000, {
         value: hre.ethers.parseUnits("1", "ether")
       });
 
@@ -71,11 +71,11 @@ describe("Auction Factory Contract", () => {
     it("should transfer all commissions to the owner", async () => {
       const { owner, address2, factory } = await loadFixture(auctionFixture);
 
-      await factory.connect(address2).createAuction("auction1", 1000, {
+      await factory.connect(address2).createAuction("auction1", "desc1", 1000, {
         value: hre.ethers.parseUnits("3", "ether")
       });
 
-      await factory.connect(address2).createAuction("auction2", 1000, {
+      await factory.connect(address2).createAuction("auction2", "desc2", 1000, {
         value: hre.ethers.parseUnits("4", "ether")
       });
 

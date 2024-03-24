@@ -29,7 +29,7 @@ export const authQuery = selector({
   key: Math.random().toString(),
   async get() {
     let user;
-    let token = localStorage.getItem("token");
+    let token = localStorage.getItem("ethtoken");
     try {
       if (token) {
         const { data } = await http.get("/api/account/profile", {
@@ -40,7 +40,7 @@ export const authQuery = selector({
         user = data.user;
       }
     } catch (error) {
-      localStorage.removeItem("token");
+      localStorage.removeItem("ethtoken");
       token = "";
     }
 

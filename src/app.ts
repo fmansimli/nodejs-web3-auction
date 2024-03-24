@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.static(path.join(process.cwd(), "./prod/public")));
 
 app.use(helmet());
-app.use(cors({ origin: ["http://localhost:3001"] }));
+app.use(cors({ origin: ["http://localhost:3001"], credentials: true }));
 app.use(morgan("dev"));
 
 app.use("/api", indexRouter);

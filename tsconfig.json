@@ -16,12 +16,11 @@
   },
   "exclude": [
     "./contracts",
-    "./node_modules",
     "./backup",
     "./webui",
     "./artifacts",
-    "./ignition",
     "./typechain-types",
+    "./ignition",
     "./cache",
     "./test",
     "./hardhat.config.ts"

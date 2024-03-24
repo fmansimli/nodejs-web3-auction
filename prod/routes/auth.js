@@ -27,6 +27,7 @@ const express_1 = require("express");
 const auth = __importStar(require("../controllers/auth.controller"));
 const router = (0, express_1.Router)();
 router.get("/anonymous", auth.anonymous);
+router.get("/refresh", auth.refresh);
 router.post("/signin", auth.signin);
 router.post("/signup", auth.signup);
 exports.default = router;

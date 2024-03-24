@@ -1,9 +1,12 @@
 import type { RequestHandler } from "express";
-import { SignInDto } from "../validations/signin-dto";
-import { BadRequestError } from "../errors";
+import type { SignInDto } from "../validations/signin-dto";
+
+import { BadRequestError, UnauthorizedError } from "../errors";
 import { User } from "../models/user";
 import { Password } from "../utils";
 import { Jwt } from "../services/jwt";
+
+const TOKEN_EXPIRE_TIME = 12 * 60 * 60 * 1000;
 
 export const signin: RequestHandler = async (req, res, next) => {
   const { email, password } = req.body as SignInDto;
@@ -20,15 +23,18 @@ export const signin: RequestHandler = async (req, res, next) => {
     }
 
     const payload = { email, id: user._id, roles: ["0", "9"] };
-    const accessToken = Jwt.signAsync(payload, "4h");
-    const refreshToken = Jwt.signAsync(payload, "24h");
+    const accessToken = Jwt.signAsync(payload, "3h");
+    const refreshToken = Jwt.signAsync(payload, "12h");
+
+    res.cookie("token", refreshToken, {
+      httpOnly: true,
+      expires: new Date(Date.now() + TOKEN_EXPIRE_TIME),
+      secure: false
+    });
 
     res.status(200).json({
-      user: {
-        _id: user._id,
-        email: user.email
-      },
-      auth: { accessToken, refreshToken }
+      user: { _id: user._id, email: user.email },
+      auth: { accessToken }
     });
   } catch (error) {
     next(error);
@@ -49,15 +55,19 @@ export const signup: RequestHandler = async (req, res, next) => {
     const resp = await User.exec().insertOne({ email, password: hashed });
 
     const payload = { email, id: resp.insertedId, roles: ["0", "9"] };
-    const accessToken = Jwt.signAsync(payload, "4h");
-    const refreshToken = Jwt.signAsync(payload, "24h");
+
+    const accessToken = Jwt.signAsync(payload, "3h");
+    const refreshToken = Jwt.signAsync(payload, "12h");
+
+    res.cookie("token", refreshToken, {
+      httpOnly: true,
+      expires: new Date(Date.now() + TOKEN_EXPIRE_TIME),
+      secure: false
+    });
 
     res.status(200).json({
-      user: {
-        _id: resp.insertedId,
-        email: email
-      },
-      auth: { accessToken, refreshToken }
+      user: { _id: resp.insertedId, email: email },
+      auth: { accessToken }
     });
   } catch (error) {
     next(error);
@@ -67,9 +77,39 @@ export const signup: RequestHandler = async (req, res, next) => {
 export const anonymous: RequestHandler = async (req, res, next) => {
   try {
     const payload = { id: "", roles: ["0"] };
-    const accessToken = Jwt.signAsync(payload, "4h");
+    const accessToken = Jwt.signAsync(payload, "3h");
 
     res.status(200).json({ user: null, auth: { accessToken } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const refresh: RequestHandler = async (req, res, next) => {
+  try {
+    let token = req.headers.cookie?.split("=")[1];
+
+    if (!token) {
+      token = req.get("auth-refresh")?.split(" ")[1];
+    }
+
+    if (!token) {
+      throw new UnauthorizedError("UNAUTHORIZED");
+    }
+
+    const payload: any = Jwt.verifyAndIgnore(token);
+    const { iat: _iat, exp: _exp, ...rest } = payload;
+
+    const accessToken = Jwt.signAsync(rest, "3h");
+    const refreshToken = Jwt.signAsync(rest, "12h");
+
+    res.cookie("token", refreshToken, {
+      httpOnly: true,
+      expires: new Date(Date.now() + TOKEN_EXPIRE_TIME),
+      secure: false
+    });
+
+    res.status(200).json({ auth: { accessToken } });
   } catch (error) {
     next(error);
   }

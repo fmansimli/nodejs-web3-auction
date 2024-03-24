@@ -6,14 +6,14 @@ import web3 from "../../web3/web3";
 const NewAuctionPage = () => {
   const navigate = useNavigate();
 
-  async function submitHandle(values: any): Promise<void> {
-    const { title, basePrice } = values || {};
+  async function submitHandler(values: any): Promise<void> {
+    const { title, desc, basePrice } = values || {};
     try {
       const signers = await web3.eth.getAccounts();
 
       const priceinWei = web3.utils.toWei(basePrice, "ether");
-      await factory.methods.createAuction(title, priceinWei).send({
-        value: web3.utils.toWei("0.002", "ether"),
+      await factory.methods.createAuction(title, desc, priceinWei).send({
+        value: web3.utils.toWei("0.0001", "ether"),
         from: signers[0]
       });
 
@@ -27,7 +27,7 @@ const NewAuctionPage = () => {
     <div className="flex flex-1">
       <div className="container my-8 flex flex-1 items-center justify-center">
         <div className="w-full max-w-md">
-          <AuctionForm onSubmit={submitHandle} />
+          <AuctionForm onSubmit={submitHandler} />
         </div>
       </div>
     </div>

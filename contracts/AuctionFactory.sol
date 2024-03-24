@@ -13,13 +13,17 @@ contract AuctionFactory {
 
     event Transfer(uint amount, address to, uint when);
 
-    function createAuction(string memory title, uint256 basePrice) public payable {
+    function createAuction(
+        string memory title,
+        string memory desc,
+        uint256 basePrice
+    ) public payable {
         require(
             msg.value >= 0.0001 ether,
             "you need to pay minimum 0.0001 ether to create an auction"
         );
 
-        address auction = address(new Auction(title, basePrice, payable(msg.sender)));
+        address auction = address(new Auction(title, desc, basePrice, payable(msg.sender)));
         auctions.push(auction);
     }
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
+import MyDialog from "../MyDialog";
 import MyInput from "../ui/MyInput";
 import Alert from "../Alert";
 import SingImg from "../../assets/images/sign.png";
@@ -12,15 +13,36 @@ interface IProps {
 const SignInForm: React.FC<IProps> = (props) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [errors, setErrors] = useState<string[]>([]);
 
   async function onSubmitHandle(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const formdata = new FormData(event.currentTarget);
-    const values = Object.fromEntries(formdata);
+    const values = Object.fromEntries<any>(formdata);
 
     try {
       setMessage("");
+
+      const lengthOfPass = values?.password.trim().length;
+      const _errors: string[] = [];
+
+      if (lengthOfPass < 8 || lengthOfPass > 20) {
+        const msg = "Lenght of password should be between 8 and 20.";
+        _errors.push(msg);
+      }
+
+      const pattern = /[\w]{2,}@[A-Za-z0-9]{3,}\.[A-Za-z]{2,}/;
+      if (!pattern.test(values.email || "")) {
+        const msg = "Invalid email address.";
+        _errors.push(msg);
+      }
+
+      if (_errors.length > 0) {
+        setErrors(_errors);
+        return;
+      }
+
       setLoading(true);
       await props.onSubmit(values);
     } catch (error: any) {
@@ -103,6 +125,22 @@ const SignInForm: React.FC<IProps> = (props) => {
           )}
         </div>
       </div>
+      <MyDialog
+        open={errors.length > 0}
+        title="Attention!"
+        hasLeftButton={false}
+        rightButtonText="close"
+        hasRightButton
+        onRightButtonClick={() => setErrors([])}
+        onLeftButtonClick={() => null}>
+        <div className="my-5 flex h-full w-full items-center justify-center">
+          <ul className="text-black dark:text-white">
+            {errors.map((err, key) => (
+              <li key={key}>{err}</li>
+            ))}
+          </ul>
+        </div>
+      </MyDialog>
     </div>
   );
 };

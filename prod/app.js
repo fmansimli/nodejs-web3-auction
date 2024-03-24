@@ -16,7 +16,7 @@ config_1.AppConfig.init();
 app.use(express_1.default.json());
 app.use(express_1.default.static(path_1.default.join(process.cwd(), "./prod/public")));
 app.use((0, helmet_1.default)());
-app.use((0, cors_1.default)({ origin: ["http://localhost:3001"] }));
+app.use((0, cors_1.default)({ origin: ["http://localhost:3001"], credentials: true }));
 app.use((0, morgan_1.default)("dev"));
 app.use("/api", routes_1.default);
 app.use(error_1.catch404);

@@ -16,8 +16,12 @@ const SignInPage = () => {
       const { user, auth } = data;
 
       setAuth({ user, initialized: true, accessToken: auth.accessToken });
-      localStorage.setItem("token", auth.accessToken);
+      localStorage.setItem("ethtoken", auth.accessToken);
       http.defaults.headers["Authorization"] = "Bearer " + auth.accessToken;
+
+      // const exp = new Date(Date.now() + 90000).toUTCString();
+      // const cookieString = `rtoken=refreshToken; Expires=${exp};`;
+      // document.cookie = cookieString;
 
       return navigate("/");
     } catch (error: any) {

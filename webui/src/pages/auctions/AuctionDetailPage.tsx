@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
 import useSWR from "swr";
+import { EyeIcon } from "@heroicons/react/24/outline";
 
 import Lottie from "lottie-react";
 import type { Contract } from "web3";
@@ -22,7 +22,6 @@ import EthereumLottie from "../../assets/lotties/diamond.json";
 import web3 from "../../web3/web3";
 import AuctionCont from "../../web3/auction";
 import * as ethSocket from "../../sockets/eth.socket";
-import { authSelector } from "../../state/auth.state";
 
 function formatMessage(signer: string, ethers: string) {
   return `${signer.substring(0, 7)}... made a bid with the amount of ${ethers} ethers`;
@@ -36,8 +35,6 @@ const AuctionDetailPage = () => {
   const [errorText, setErrorText] = useState("");
   const [processing, setProcessing] = useState(false);
   const [socketSize, setSocketSize] = useState(0);
-
-  const authData = useRecoilValue(authSelector);
 
   const { data, error, isLoading, mutate } = useSWR<Auction, any, any>(params.id, getSumary);
 
@@ -53,7 +50,8 @@ const AuctionDetailPage = () => {
   }, []);
 
   useEffect(() => {
-    ethSocket.init(authData.accessToken!, (succ) => {
+    const token = localStorage.getItem("ethtoken") as string;
+    ethSocket.init(token, (succ) => {
       if (succ) {
         ethSocket.joinRoom({ room: params.id! }, (size) => {
           setSocketSize(size);
@@ -182,10 +180,12 @@ const AuctionDetailPage = () => {
         <div className="flex flex-1 flex-col gap-8">
           <div className="flex items-center justify-between ">
             <div className="flex items-center gap-3">
-              <div className="text-lg font-bold text-black dark:text-white lg:text-2xl">
-                <h1 onClick={getAccounts}>
-                  {data?.title} ({socketSize})
-                </h1>
+              <div className="flex flex-wrap items-center gap-6 text-lg font-bold text-black dark:text-white lg:text-xl">
+                <h1 onClick={getAccounts}>{data?.title}</h1>
+                <div className="flex items-center gap-2 rounded-md border px-3 py-1">
+                  <EyeIcon className="h-6 w-6" />
+                  <span>{socketSize}</span>
+                </div>
               </div>
             </div>
 
@@ -306,10 +306,7 @@ const AuctionDetailPage = () => {
 
           <div className="text-md mt-10 text-black dark:text-white">
             <h5 className="mb-3 text-lg font-bold">Description:</h5>
-            <div>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum, dolor sit
-              amet consectetur adipisicing elit. Id, corrupti suscipit qui quidem minima nulla?
-            </div>
+            <div>{data?.desc}</div>
           </div>
         </div>
       </div>
@@ -341,7 +338,7 @@ const AuctionDetailPage = () => {
         hasRightButton
         onLeftButtonClick={() => null}
         onRightButtonClick={() => setErrorText("")}
-        rightButtonText="ok, got it.">
+        rightButtonText="close">
         <div className="my-8 text-center text-black dark:text-white">
           <div>{errorText}</div>
         </div>

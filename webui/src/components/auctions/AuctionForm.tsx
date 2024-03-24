@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
+import MyDialog from "../MyDialog";
 import MyInput from "../ui/MyInput";
 import MyTextArea from "../ui/MyTextArea";
 import Alert from "../Alert";
@@ -14,14 +15,41 @@ interface IProps {
 const AuctionForm: React.FC<IProps> = (props) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [errors, setErrors] = useState<string[]>([]);
 
   async function onSubmitHandle(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const formdata = new FormData(event.currentTarget);
-    const values = Object.fromEntries(formdata);
+    const values = Object.fromEntries<any>(formdata);
 
+    setMessage("");
     try {
+      const lengthOfTitle = values?.title.trim().length;
+      const _errors: string[] = [];
+
+      if (lengthOfTitle < 5 || lengthOfTitle > 14) {
+        const msg = "Lenght of title should be between 5 and 14.";
+        _errors.push(msg);
+      }
+
+      if (isNaN(Number(values.basePrice))) {
+        const msg = "Base price should be a number.";
+        _errors.push(msg);
+      }
+
+      const lengthOfDesc = values?.desc.trim().length;
+
+      if (lengthOfDesc < 5 || lengthOfDesc > 50) {
+        const msg = "Lenght of description should be between 5 and 50";
+        _errors.push(msg);
+      }
+
+      if (_errors.length > 0) {
+        setErrors(_errors);
+        return;
+      }
+
       setMessage("");
       setLoading(true);
       await props.onSubmit(values);
@@ -43,7 +71,7 @@ const AuctionForm: React.FC<IProps> = (props) => {
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
             Create a new Auction
           </h1>
-          <form onSubmit={onSubmitHandle} className="space-y-4 md:space-y-6">
+          <form noValidate onSubmit={onSubmitHandle} className="space-y-4 md:space-y-6">
             <MyInput
               id="title"
               placeholder="enter title"
@@ -58,6 +86,7 @@ const AuctionForm: React.FC<IProps> = (props) => {
               name="basePrice"
               type="number"
               step={0.001}
+              defaultValue={0}
               min={0}
               label="Base Price (in ETH)"
               autoComplete="off"
@@ -83,6 +112,22 @@ const AuctionForm: React.FC<IProps> = (props) => {
           )}
         </div>
       </div>
+      <MyDialog
+        open={errors.length > 0}
+        title="Attention!"
+        hasLeftButton={false}
+        rightButtonText="close"
+        hasRightButton
+        onRightButtonClick={() => setErrors([])}
+        onLeftButtonClick={() => null}>
+        <div className="my-5 flex h-full w-full items-center justify-center">
+          <ul className="text-black dark:text-white">
+            {errors.map((err, key) => (
+              <li key={key}>{err}</li>
+            ))}
+          </ul>
+        </div>
+      </MyDialog>
     </div>
   );
 };

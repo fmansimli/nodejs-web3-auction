@@ -1,7 +1,7 @@
 import { type Socket, io } from "socket.io-client";
 
 export let socket: Socket;
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+const BASE_URL = import.meta.env.VITE_BASE_URL || "";
 
 export const init = (token: string, callback: (succeed: boolean) => void) => {
   if (socket?.connected) {
@@ -30,8 +30,6 @@ export const init = (token: string, callback: (succeed: boolean) => void) => {
   });
 
   socket.on("connect_error", (_error) => {
-    console.log(_error);
-
     callback(false);
   });
 

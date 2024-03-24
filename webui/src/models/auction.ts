@@ -3,6 +3,7 @@ import type { Bid } from "./bid";
 export class Auction {
   public _id: string;
   public title: string;
+  public desc: string;
   public basePrice: number;
   public completed: boolean;
   public finishTime: number;
