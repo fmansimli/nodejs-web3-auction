@@ -1,11 +1,12 @@
 import { IsEmail, MinLength, MaxLength } from "class-validator";
-import { Exclude } from "class-transformer";
+import { Expose } from "class-transformer";
 
 export class SignUpDto {
+  @Expose()
   @IsEmail()
   email: string;
 
-  @Exclude()
+  @Expose()
   @MinLength(8)
   @MaxLength(20)
   password: string;
