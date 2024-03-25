@@ -1,10 +1,15 @@
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
 import useSWR from "swr";
+import Lottie from "lottie-react";
+
 import AuctionItem from "../components/auctions/AuctionItem";
 import AuctionsSkeleton from "../components/auctions/AuctionsSkeleton";
 import factory from "../web3/factory";
 import AuctionCont from "../web3/auction";
+
 import { Auction } from "../models/auction";
+import NotFoundLottie from "../assets/lotties/notfound.json";
 
 const HomePage = () => {
   const { data, error, isLoading } = useSWR<any>("/auctions", getList);
@@ -61,8 +66,18 @@ const HomePage = () => {
           ))}
         </div>
       ) : (
-        <div className="flex w-full flex-1 items-center justify-center">
-          <div className="text-red-500">no data!</div>
+        <div className="container flex w-full flex-1 flex-col items-center justify-center gap-7">
+          <div className="w-1/2 lg:w-1/4">
+            <Lottie animationData={NotFoundLottie} />
+          </div>
+          <div className="w-3/4 text-center text-lg leading-7 text-black dark:text-white">
+            No auctions available, start creating a new one.
+          </div>
+          <Link
+            to="/auctions/new"
+            className="justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">
+            new auction
+          </Link>
         </div>
       )}
     </div>

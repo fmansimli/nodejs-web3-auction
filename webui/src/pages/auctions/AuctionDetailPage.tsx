@@ -276,7 +276,9 @@ const AuctionDetailPage = () => {
 
             <div className="flex items-center gap-3">
               <span className="">Etherscan:</span>
-              <a href="https://etherscan.io/" className="text-blue-600 hover:underline">
+              <a
+                href={`https://sepolia.etherscan.io/address/${data?._id}`}
+                className="text-blue-600 hover:underline">
                 view on etherscan
               </a>
             </div>
