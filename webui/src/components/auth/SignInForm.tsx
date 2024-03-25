@@ -70,7 +70,6 @@ const SignInForm: React.FC<IProps> = (props) => {
               name="email"
               label="Your email"
               autoComplete="off"
-              defaultValue="fmansimli@test.com"
             />
 
             <MyInput
@@ -80,7 +79,6 @@ const SignInForm: React.FC<IProps> = (props) => {
               type="password"
               label="Password"
               autoComplete="off"
-              defaultValue="MyExtremePassword"
             />
             <div className="flex items-center justify-between">
               <div className="flex items-start">
