@@ -11,7 +11,7 @@ export class Jwt {
     });
   }
 
-  static signAsync(payload: any, expiresIn: string | number = 5) {
+  static signAsync(payload: any, expiresIn: string | number = "1h") {
     return sign(payload, process.env.JWT_SECRET as string, { expiresIn });
   }
 

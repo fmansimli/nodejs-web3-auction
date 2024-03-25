@@ -16,6 +16,8 @@ export const validate = (Dto: any) => {
         throw new ValidationError(errors);
       }
 
+      req.body = values;
+
       next();
     } catch (error) {
       next(error);

@@ -9,20 +9,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SignInDto = void 0;
+exports.SignUpDto = void 0;
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
-class SignInDto {
+class SignUpDto {
 }
-exports.SignInDto = SignInDto;
+exports.SignUpDto = SignUpDto;
 __decorate([
-    (0, class_transformer_1.Expose)(),
     (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
-], SignInDto.prototype, "email", void 0);
+], SignUpDto.prototype, "email", void 0);
 __decorate([
-    (0, class_transformer_1.Expose)(),
+    (0, class_transformer_1.Exclude)(),
     (0, class_validator_1.MinLength)(8),
     (0, class_validator_1.MaxLength)(20),
     __metadata("design:type", String)
-], SignInDto.prototype, "password", void 0);
+], SignUpDto.prototype, "password", void 0);

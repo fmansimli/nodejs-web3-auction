@@ -34,7 +34,8 @@ const catchError = (err, req, res, _next) => {
     catch (error) {
         res.status(500).json({
             httpCode: 500,
-            message: "unknown error"
+            message: "something went wrong",
+            name: "UnknownError"
         });
     }
 };

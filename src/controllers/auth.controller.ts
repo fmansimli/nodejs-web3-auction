@@ -1,5 +1,6 @@
 import type { RequestHandler } from "express";
 import type { SignInDto } from "../validations/signin-dto";
+import type { SignUpDto } from "src/validations/signup.dto";
 
 import { BadRequestError, UnauthorizedError } from "../errors";
 import { User } from "../models/user";
@@ -42,7 +43,7 @@ export const signin: RequestHandler = async (req, res, next) => {
 };
 
 export const signup: RequestHandler = async (req, res, next) => {
-  const { email, password } = req.body as SignInDto;
+  const { email, password } = req.body as SignUpDto;
 
   try {
     const userExists = await User.exec().findOne({ email });
@@ -87,11 +88,7 @@ export const anonymous: RequestHandler = async (req, res, next) => {
 
 export const refresh: RequestHandler = async (req, res, next) => {
   try {
-    let token = req.headers.cookie?.split("=")[1];
-
-    if (!token) {
-      token = req.get("auth-refresh")?.split(" ")[1];
-    }
+    const token = req.headers.cookie?.split("=")[1];
 
     if (!token) {
       throw new UnauthorizedError("UNAUTHORIZED");

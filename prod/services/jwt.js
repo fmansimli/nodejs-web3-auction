@@ -11,7 +11,7 @@ class Jwt {
             ignoreExpiration: true
         });
     }
-    static signAsync(payload, expiresIn = 5) {
+    static signAsync(payload, expiresIn = "1h") {
         return (0, jsonwebtoken_1.sign)(payload, process.env.JWT_SECRET, { expiresIn });
     }
     static signKey(payload) {

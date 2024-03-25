@@ -14,6 +14,7 @@ const validate = (Dto) => {
             if (errors.length > 0) {
                 throw new validation_error_1.ValidationError(errors);
             }
+            req.body = values;
             next();
         }
         catch (error) {

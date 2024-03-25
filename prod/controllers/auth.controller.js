@@ -75,10 +75,7 @@ const anonymous = async (req, res, next) => {
 exports.anonymous = anonymous;
 const refresh = async (req, res, next) => {
     try {
-        let token = req.headers.cookie?.split("=")[1];
-        if (!token) {
-            token = req.get("auth-refresh")?.split(" ")[1];
-        }
+        const token = req.headers.cookie?.split("=")[1];
         if (!token) {
             throw new errors_1.UnauthorizedError("UNAUTHORIZED");
         }

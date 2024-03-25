@@ -25,9 +25,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const auth = __importStar(require("../controllers/auth.controller"));
+const validate_1 = require("../middlewares/validate");
+const signin_dto_1 = require("../validations/signin-dto");
+const signup_dto_1 = require("../validations/signup.dto");
 const router = (0, express_1.Router)();
 router.get("/anonymous", auth.anonymous);
 router.get("/refresh", auth.refresh);
-router.post("/signin", auth.signin);
-router.post("/signup", auth.signup);
+router.post("/signin", (0, validate_1.validate)(signin_dto_1.SignInDto), auth.signin);
+router.post("/signup", (0, validate_1.validate)(signup_dto_1.SignUpDto), auth.signup);
 exports.default = router;
